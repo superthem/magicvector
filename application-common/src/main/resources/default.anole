@@ -1,0 +1,5 @@
+#env:all
+anole.strict.mode=false
+
+# SSO的登录页面地址
+#magic.vector.sso.login.page.url=

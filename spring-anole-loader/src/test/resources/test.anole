@@ -1,4 +1,0 @@
-log4j.target.appender=console
-anole.xml.greeting=Hello, Spring!
-anole.code.greeting=Hello, Spring!
-anole.code.static.greeting=Hello, Spring!
