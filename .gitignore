@@ -10,7 +10,8 @@ target/
 .idea
 **/.iml
 **/.flattened-pom.xml
-=======
+
+
 # Compiled class file
 *.class
 
