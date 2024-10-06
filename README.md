@@ -8,7 +8,7 @@
 # 支持的功能
 1. Spring Boot 2.7.14 + Spring Cloud 2021.0.8
 2. Anole 多环境配置：不同环境的相同配置可以放到同一个文件中
-3. RPC调用local环境下自动调用本地微服务，非local环境走注册中心
+3. RPC调用：OpenFeign Client定义时只需指定127.0.0.1本地地址，方便本地调试，仅会在local环境下生效，非local环境走注册中心
 4. 注册中心：支持Eureka/Nacos
 5. 消息队列：阿里云RocketMQ 5.x/腾讯云RocketMQ 5.x
 6. 对象存储：阿里云OSS/腾讯云COS

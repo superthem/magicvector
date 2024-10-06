@@ -21,7 +21,7 @@
     <url>https://www.superthem.com</url>
 	<description>魔法向量版权所有，仅供圆领客户使用，圆领-中国领先的远程工作和技能电商平台</description>
 	<properties>
-		<revision>1.0.0</revision>
+		<revision>1.0.0-SNAPSHOT</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>4.12</junit.version>
 		<google.guava>19.0</google.guava>
@@ -248,8 +248,24 @@
 		</dependency>
 	</dependencies>
 
+	<distributionManagement>
+		<repository>
+			<id>maven-releases</id>
+			<url>http://admin:flap20220427@106.14.95.226:8181/repository/maven-releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>maven-snapshots</id>
+			<url>http://admin:flap20220427@106.14.95.226:8181/repository/maven-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>3.1.0</version>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
