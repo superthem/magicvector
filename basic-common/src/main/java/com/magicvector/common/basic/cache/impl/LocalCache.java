@@ -19,7 +19,7 @@ import java.util.concurrent.ExecutionException;
  * Local Cache Implement.
  * TODO 未实现Set相关方法
  */
-@Service
+@Service("localCache")
 @Slf4j
 public class LocalCache extends AbstractCache {
 

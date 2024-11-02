@@ -18,9 +18,6 @@ import springfox.documentation.spring.web.json.Json;
 import java.util.List;
 import java.util.ServiceLoader;
 
-/**
- * @author zhangg
- */
 @Configuration
 @EnableWebMvc
 public class WebMvcJsonConfig implements WebMvcConfigurer {
@@ -30,8 +27,8 @@ public class WebMvcJsonConfig implements WebMvcConfigurer {
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(gsonHttpMessageConverterBean());
         converters.add(stringHttpMessageConverter());
+        converters.add(gsonHttpMessageConverterBean());
     }
 
     @Bean

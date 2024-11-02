@@ -33,7 +33,7 @@ public class DistLockAspect {
     @Autowired
     private DistLock distLock;
 
-    @Pointcut("@annotation(com.magicvector.common.basic.annotation.DistributedLock)")
+    @Pointcut("@annotation(com.magicvector.common.rest.annotation.DistributedLock)")
     public void pointCut() {
     }
 

@@ -43,7 +43,7 @@ public abstract class AbstractCache implements Cache {
 
         public static Serializer getSerializer(String cacheType){
             String name = "kryo"; //default.
-            if(S.isEmpty(Anole.getProperty("cache.serializer"))){
+            if(S.isNotEmpty(Anole.getProperty("cache.serializer"))){
                 name = Anole.getProperty("cache.serializer");
             }
             return getSerializer(name,cacheType);

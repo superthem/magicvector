@@ -34,7 +34,7 @@ public class DateTypeAdapterFactory implements TypeAdapterFactory {
                     } catch (Exception ex) {
                         String valueString = in.nextString();
                         if (isNumeric(valueString)) {
-                            return new Date(Long.valueOf(valueString) * 1000);
+                            return new Date(Long.parseLong(valueString) * 1000);
                         }
                         return parseDate(valueString);
                     }

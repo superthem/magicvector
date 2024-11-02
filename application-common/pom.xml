@@ -9,7 +9,6 @@
 	<artifactId>application-common</artifactId>
 	<packaging>jar</packaging>
 	<dependencies>
-
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
@@ -37,13 +36,9 @@
 			<artifactId>rpc-common</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>cn.dev33</groupId>
-			<artifactId>sa-token-spring-boot-starter</artifactId>
-		</dependency>
-		<!-- Sa-Token SSO 单点登录模块 -->
-		<dependency>
-			<groupId>cn.dev33</groupId>
-			<artifactId>sa-token-sso</artifactId>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.5.8</version>
 		</dependency>
     </dependencies>
     <build>

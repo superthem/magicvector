@@ -21,17 +21,17 @@ public class MagicException extends RuntimeException{
     }
 
     public MagicException(Error error){
-        super(String.format("%s-%s", error.getSystem(), error.getDeveloperReadInfo()));
+        super(String.format("[%s]-%s", error.getCode(), error.getDeveloperReadInfo()));
         this.error = error;
     }
 
     public MagicException(Error error, String message){
-        super(String.format("%s-%s. Details: %s", error.getSystem(), error.getDeveloperReadInfo(), message));
+        super(String.format("[%s]-%s. Details: %s", error.getCode(), error.getDeveloperReadInfo(), message));
         this.error = error;
     }
 
     public MagicException(Error error, String messagePattern, String ... parameters){
-        super(String.format("%s-%s. Details: %s", error.getSystem(), error.getDeveloperReadInfo(),
+        super(String.format("[%s]-%s. Details: %s", error.getCode(), error.getDeveloperReadInfo(),
                 S.isEmpty(messagePattern) ? "" : String.format(messagePattern.replace("{}", "%s"), parameters)));
         this.error = error;
     }

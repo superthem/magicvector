@@ -19,19 +19,9 @@ public class Error implements Serializable {
      */
     private String developerReadInfo;
 
-    /**
-     * The system name;
-     */
-    private String system;
-    /**
-     * The business line name;
-     */
-    private String businessLine;
 
-    public Error(String code, String developerReadInfo, String userReadInfo, String system, String businessLine){
+    public Error(String code, String developerReadInfo, String userReadInfo){
         this.code = code;
-        this.system = system;
-        this.businessLine = businessLine;
         this.userReadInfo = userReadInfo;
         this.developerReadInfo = developerReadInfo;
     }

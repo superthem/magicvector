@@ -9,6 +9,13 @@ import com.magicvector.common.basic.exceptions.MagicException;
  */
 public class Asserts {
 
+
+    public static void assertTrue(boolean expression, Error error, String notes){
+        if(!expression){
+            throw new MagicException( error, notes);
+        }
+    }
+
     /**
      * Assert the expression is true, otherwise interrupt the request and
      * give out the notes.

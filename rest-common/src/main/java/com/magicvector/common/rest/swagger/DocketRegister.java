@@ -59,6 +59,8 @@ public class DocketRegister implements BeanDefinitionRegistryPostProcessor{
 		List<Class<?>> result = new ArrayList<Class<?>>();
 		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
         scanner.addIncludeFilter(new AnnotationTypeFilter(annotation));
+		String scanBasePackage = Anole.getProperty("swagger.scan.base.package");
+		Asserts.assertTrue(S.isNotEmpty(scanBasePackage), "请设置swagger.scan.base.package为你的controller所在包");
         for (BeanDefinition bd : scanner.findCandidateComponents(Anole.getProperty("swagger.scan.base.package"))) {
         	try {
 				result.add(Class.forName(bd.getBeanClassName()));
@@ -66,8 +68,21 @@ public class DocketRegister implements BeanDefinitionRegistryPostProcessor{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-        } 
-        return result;
+        }
+
+		String builtinBasePackage = Anole.getProperty("magic.vector.builtin.controller.base.package");
+		if(S.isNotEmpty(builtinBasePackage)){
+			for (BeanDefinition bd : scanner.findCandidateComponents(builtinBasePackage)) {
+				try {
+					result.add(Class.forName(bd.getBeanClassName()));
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return result;
 	}
 	private  void addDocket(String groupName, String description, String version, String author, String email, Class<?> targetClass) {
 		groupName = getValue(groupName);

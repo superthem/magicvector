@@ -31,8 +31,7 @@ public class CounterServiceImpl implements CouterService {
     // 定时任务执行器
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-    public CounterServiceImpl(Cache cache) {
-        this.cache = cache;
+    public CounterServiceImpl() {
         // 定时任务，每隔5秒同步数据到Redis
         scheduler.scheduleAtFixedRate(this::syncToRedis, 5, 5, TimeUnit.SECONDS);
     }

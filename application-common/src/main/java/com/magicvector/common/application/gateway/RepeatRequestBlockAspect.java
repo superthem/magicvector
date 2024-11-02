@@ -35,7 +35,7 @@ public class RepeatRequestBlockAspect {
     private DistLock distLock;
     private final ExpressionParser parser = new SpelExpressionParser();
 
-    @Pointcut("@annotation(com.magicvector.common.basic.annotation.ConcurrencyControl)")
+    @Pointcut("@annotation(com.magicvector.common.rest.annotation.LimitedResource)")
     public void pointCut() {
     }
 
@@ -61,7 +61,7 @@ public class RepeatRequestBlockAspect {
         }
         String lockTarget =  "LimitedResourceLock:" + resource;
 
-        String lock = distLock.lock(lockTarget);
+        String lock = distLock.lock(lockTarget, 0 ,windowTimeSize);
 
         if(lock == null){
             log.warn("限制性资源目标正在被访问中, class={}, method={}, resource={}", className, method, resource);

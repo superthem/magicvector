@@ -4,6 +4,7 @@ import com.magicvector.common.rest.util.LanguageUtil;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import springfox.documentation.spring.web.DocumentationCache;
+import springfox.documentation.spring.web.plugins.DocumentationPluginsManager;
 import springfox.documentation.swagger.web.InMemorySwaggerResourcesProvider;
 import springfox.documentation.swagger.web.SwaggerResource;
 
@@ -14,8 +15,8 @@ import java.util.List;
 public class InMemorySwaggerResourcesProviderExt extends InMemorySwaggerResourcesProvider {
 
 	// 修改构造函数，只保留 Environment 和 DocumentationCache
-	public InMemorySwaggerResourcesProviderExt(Environment environment, DocumentationCache documentationCache) {
-		super(environment, documentationCache);
+	public InMemorySwaggerResourcesProviderExt(Environment environment, DocumentationCache documentationCache, DocumentationPluginsManager documentationPluginsManager) {
+		super(environment, documentationCache, documentationPluginsManager);
 	}
 
 	@Override
