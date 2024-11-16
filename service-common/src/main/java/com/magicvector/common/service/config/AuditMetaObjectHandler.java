@@ -2,11 +2,14 @@ package com.magicvector.common.service.config;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.magicvector.common.basic.context.GlobalContext;
+import com.magicvector.common.basic.util.S;
 import org.apache.ibatis.reflection.MetaObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AuditMetaObjectHandler implements MetaObjectHandler {
 
@@ -60,16 +63,21 @@ public class AuditMetaObjectHandler implements MetaObjectHandler {
     }
 
     private String getExecuteUserName(MetaObject metaObject, String fieldName) {
-        String executeUserName = "fillUserId";  //todo fill user id
+        String executeUserName = "SYSTEM";
 
         String valByName = (String) this.getFieldValByName(fieldName, metaObject);
         if (valByName != null) {
             executeUserName = valByName;
         } else {
             try {
-                executeUserName = GlobalContext.getCurrentUser().getUserId();
+                if(GlobalContext.getCurrentUser()!=null){
+                    Map<String, Object> userProps = GlobalContext.getCurrentUser().getUserProps();
+                    if(userProps != null && userProps.get("id") != null){
+                        executeUserName = userProps.get("id").toString();
+                    }
+                }
             } catch (Exception e) {
-                log.info("find userId error info:{}", e.getMessage());
+                log.info("找不到当前线程上下文中的用户信息:{}", e.getMessage());
             }
         }
         return executeUserName;

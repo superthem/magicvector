@@ -48,12 +48,13 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<!-- 指定编译器版本 -->
 		<maven.compiler.release>8</maven.compiler.release>
+		<mysql.version>8.0.25</mysql.version>
 		<spring.boot.version>2.7.14</spring.boot.version>
 		<spring.cloud.version>2021.0.8</spring.cloud.version>
 		<swagger.version>3.0.0</swagger.version>
 		<sso.version>1.39.0</sso.version>
 		<jettison.version>1.5.4</jettison.version>
-		<mybatis.plus.version>3.5.2</mybatis.plus.version>
+		<mybatis.plus.version>3.5.0</mybatis.plus.version>
 		<dependencies.dependency.version>2.7.14</dependencies.dependency.version>
 	</properties>
 	
@@ -267,6 +268,11 @@
 			</dependency>
 			<dependency>
 				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus</artifactId>
+				<version>${mybatis.plus.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.baomidou</groupId>
 				<artifactId>mybatis-plus-core</artifactId>
 				<version>${mybatis.plus.version}</version>
 			</dependency>
@@ -278,12 +284,23 @@
 			<dependency>
 				<groupId>com.baomidou</groupId>
 				<artifactId>mybatis-plus-boot-starter</artifactId>
-				<version>3.5.2</version>
+				<version>${mybatis.plus.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.magicvector</groupId>
 				<artifactId>rpc-common</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<scope>runtime</scope>
+				<version>${mysql.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus-boot-starter</artifactId>
+				<version>${mybatis.plus.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.squareup.okhttp3</groupId>

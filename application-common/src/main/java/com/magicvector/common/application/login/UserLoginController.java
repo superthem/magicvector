@@ -23,7 +23,8 @@ public interface UserLoginController {
     Response<Boolean> logout(@RequestBody Request<Void> request);
 
 
-    @Public
-    @PostMapping("/checkSsoLogin")
-    Response<SsoCheckResult> checkSsoLogin(@RequestBody Request<Void> request);
+    @Private
+    @PostMapping("/getUserInfo")
+    Response<CurrentUser> getUserInfo(@RequestBody Request<Void> request);
+
 }

@@ -9,21 +9,14 @@ import java.util.Map;
 @Data
 public class CurrentUser implements Serializable {
 
-	private String userId;
+	private String token;
 
-	private String username;
+	private Map<String, Object> userProps;
 
-	private String nickname;
-
-	private String phone;
-
-	/**
-	 * 用户的额外信息（注意别和上下文的额外信息弄混，这里只放用户的额外信息，如出生年月等）
-	 */
-	private Map<String, String> ext;
+	private String loginUrl;
 
 	public CurrentUser(){
-		ext = new HashMap<>();
+		userProps = new HashMap<>();
 	}
 
 }

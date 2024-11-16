@@ -68,24 +68,24 @@ public class Response<T> implements Serializable {
 	}
 
 
-	public static <T> Response success(T result){
-		Response response = new Response();
+	public static <T> Response<T> success(T result){
+		Response<T>  response = new Response<T>();
 		response.setSuccess(true);
 		response.setResult(result);
 		return response;
 	}
 
-	public static <T> Response fail(MagicException e){
-		return new Response(e);
+	public static <T> Response<T>  fail(MagicException e){
+		return new Response<T>(e);
 
 	}
 
-	public static <T> Response fail(Error error){
-		return  new Response(error);
+	public static <T> Response<T>  fail(Error error){
+		return  new Response<T> (error);
 	}
 
-	public static <T> Response fail(Error error, String ... message){
-		return  new Response(error, message);
+	public static <T> Response<T>  fail(Error error, String ... message){
+		return  new Response<T>(error, message);
 	}
 
 }

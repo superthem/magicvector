@@ -1,6 +1,6 @@
 #env:all
 anole.strict.mode=false
-
+user.session.cache.time=604800000
 # SSO的登录页面地址
 #magic.vector.sso.login.page.url=
 

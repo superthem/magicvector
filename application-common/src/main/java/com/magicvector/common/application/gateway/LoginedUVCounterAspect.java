@@ -19,6 +19,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * UV计数器
@@ -48,10 +49,14 @@ public class LoginedUVCounterAspect extends AbstractAspect{
             String page = annotation.page();
 
             String userid = null;
-            if(GlobalContext.getContext() != null
-                    && GlobalContext.getContext().getUser() != null
+            if(
+                    GlobalContext.getContext().getUser() != null
+                    && GlobalContext.getContext().getUser().getUserProps() != null
             ){
-                userid = GlobalContext.getContext().getUser().getUserId();
+                Map<String, Object> userProps = GlobalContext.getCurrentUser().getUserProps();
+                if(userProps != null && userProps.get("id") != null){
+                    userid = userProps.get("id").toString();
+                }
             }
 
             couterService.counter("UV", page, userid);
