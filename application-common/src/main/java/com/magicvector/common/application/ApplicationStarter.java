@@ -22,6 +22,9 @@ import java.util.TimeZone;
 @Configuration
 @ComponentScan(basePackages = {"${magic.vector.base.package}","com.magicvector"})
 @AnoleConfigLocation
+@EnableFeignClients(
+		basePackages = {"${magic.vector.base.package}","com.magicvector"}
+)
 @EnableConfigurationProperties
 public class ApplicationStarter {
 

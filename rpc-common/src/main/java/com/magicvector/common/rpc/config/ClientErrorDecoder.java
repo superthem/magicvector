@@ -24,7 +24,7 @@ public class ClientErrorDecoder implements ErrorDecoder {
         try {
             responseStreamString = Util.toString(response.body().asReader(StandardCharsets.UTF_8));
             JsonObject responseObject = getMessageObject(responseStreamString);
-            if(responseObject.has("error") && responseObject.get("error").getAsString().trim().startsWith("{")){
+            if(responseObject.has("error") && responseObject.get("error").toString().trim().startsWith("{")){
                 return JSON.parseObject(responseStreamString, MagicException.class);
             }
             else if(responseObject.has("error")

@@ -4,6 +4,7 @@ import com.magicvector.common.rpc.feign.FeignClientBeanFactoryPostProcessor;
 import com.magicvector.common.rpc.filter.FeignClientFilter;
 import com.magicvector.common.rpc.filter.FeignServerFilter;
 import feign.RequestInterceptor;
+import feign.RequestTemplate;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

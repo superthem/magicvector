@@ -15,6 +15,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.spring.web.json.Json;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.ServiceLoader;
 
@@ -41,7 +42,7 @@ public class WebMvcJsonConfig implements WebMvcConfigurer {
     @Bean
     public StringHttpMessageConverter stringHttpMessageConverter() {
         // 用于prometheus 推数据
-        StringHttpMessageConverter converter = new StringHttpMessageConverter();
+        StringHttpMessageConverter converter = new StringHttpMessageConverter(StandardCharsets.UTF_8);
         converter.setSupportedMediaTypes(Lists.newArrayList(MediaType.TEXT_PLAIN));
         return converter;
     }
