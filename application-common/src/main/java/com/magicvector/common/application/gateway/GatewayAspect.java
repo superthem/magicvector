@@ -28,12 +28,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
@@ -60,6 +62,9 @@ public class GatewayAspect {
 
 	@Autowired(required = false)
 	private ContextExtSeedService contextExtSeedService;
+	
+	@Value("${magic.vector.gateway.log.enabled:true}")
+	private Boolean logDetailEnabled;
 
 	@Around("restApi()")
 	public Object logRequestAndResponse(ProceedingJoinPoint joinPoint){
@@ -108,7 +113,7 @@ public class GatewayAspect {
 		Asserts.assertTrue(request != null, "The first argument of api should must be Request or its subclass.");
 		Asserts.assertTrue(S.isNotEmpty(request.getTraceId()), "The front-end client must specify a trace id while calling any application services!" );
 
-		if(separated){// separated output
+		if(logDetailEnabled && separated){// separated output
 			if(formatedLog){// formated output
 				logger.info("MethodName:{}; RequestId:{}\nRequest:\n{}\n",methodName, request.getRequestId(), JSON.toJSONString(request, true));
 			}
@@ -160,23 +165,26 @@ public class GatewayAspect {
 		response.setCostTime(System.currentTimeMillis() - currentTime);
 		JsonObject jsonResponse = JSON.toJSON(response);
 
-		if(separated){
-			jsonResponse.addProperty("requestId", request.getRequestId());
-			if(formatedLog){// formated output
-				logger.info("MethodName:{}; RequestId:{}\nResponse:\n{}\n", methodName,request.getRequestId(),  JSON.toJSONString(jsonResponse, true) );
+		if(logDetailEnabled){
+			if(separated){
+				jsonResponse.addProperty("requestId", request.getRequestId());
+				if(formatedLog){// formated output
+					logger.info("MethodName:{}; RequestId:{}\nResponse:\n{}\n", methodName,request.getRequestId(),  JSON.toJSONString(jsonResponse, true) );
+				}
+				else{
+					logger.info("MethodName:{}; RequestId:{}; Response:{}", methodName,request.getRequestId(), JSON.toJSONString(jsonResponse, false));
+				}
 			}
-			else{
-				logger.info("MethodName:{}; RequestId:{}; Response:{}", methodName,request.getRequestId(), JSON.toJSONString(jsonResponse, false));
+			else{// output together
+				if(formatedLog){// formated output
+					logger.info("MethodName:{}; RequestId:{}\nRequest:{}\nGlobalContext:{}\nResponse:\n{}\n",methodName, request.getRequestId(), JSON.toJSONString(request, true), JSON.toJSONString(GlobalContext.getContext(), true), JSON.toJSONString(jsonResponse, true) );
+				}
+				else{
+					logger.info("MethodName:{};RequestId:{}; Request:{}; GlobalContext:{}; Response:{}",methodName, request.getRequestId(), JSON.toJSONString(request, true), JSON.toJSONString(GlobalContext.getContext(),true), JSON.toJSONString(jsonResponse, true));
+				}
 			}
 		}
-		else{// output together
-			if(formatedLog){// formated output
-				logger.info("MethodName:{}; RequestId:{}\nRequest:{}\nGlobalContext:{}\nResponse:\n{}\n",methodName, request.getRequestId(), JSON.toJSONString(request, true), JSON.toJSONString(GlobalContext.getContext(), true), JSON.toJSONString(jsonResponse, true) );
-			}
-			else{
-				logger.info("MethodName:{};RequestId:{}; Request:{}; GlobalContext:{}; Response:{}",methodName, request.getRequestId(), JSON.toJSONString(request, true), JSON.toJSONString(GlobalContext.getContext(),true), JSON.toJSONString(jsonResponse, true));
-			}
-		}
+
 		return response;
 	}
 

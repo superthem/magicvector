@@ -21,6 +21,14 @@ public class GlobalContext {
 		return contextParam.getUser();
 	}
 
+	public static Object getUserId(){
+		if(getCurrentUser() == null || getCurrentUser().getUserProps() == null
+		|| getCurrentUser().getUserProps().get("id")== null){
+			return null;
+		}
+		return getCurrentUser().getUserProps().get("id");
+	}
+
 	public static void setTraceId(String traceId) {
 		MDC.put(LOG_TRACE_ID, traceId);
 		ContextParam contextParam = getThreadParamInstance();

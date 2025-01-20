@@ -52,7 +52,7 @@ public class Response<T> implements Serializable {
 	}
 
 	private Response(MagicException e){
-		this(e, null);
+		this(e, e.getMessage());
 	}
 
 	private Response(MagicException e, String userReadMessage){

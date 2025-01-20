@@ -8,6 +8,12 @@ import java.util.Map;
 public interface UserLoginService {
 
     /**
+     * 进一步处理用户信息（成功时回调，用于更新一些易变的用户信息）
+     * @param currentUser
+     */
+    public void processUserInfo(CurrentUser currentUser);
+
+    /**
      * 电话号码登录。登录失败请抛出MagicException异常
      * @param phone
      * @param code

@@ -105,6 +105,7 @@ public class UserLoginControllerImpl implements UserLoginController {
         String cacheKey = getSessionKey(token);
         CurrentUser cachedUser = cache.get(cacheKey);
         if( cachedUser != null){
+            userLoginService.processUserInfo(cachedUser);
             return  Response.success(cachedUser);
         }
 
