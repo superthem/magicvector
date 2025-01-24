@@ -24,7 +24,7 @@ public class Errors {
 
 	public static Error NOT_SUPPORTED   	      	   = new Error("0000009", "方法尚未支持", "这个方法暂时不支持调用呢！");
 
-	public static Error BAT_DATA_FORMAT   	       = new Error("0000010", "错误的数据格式", "错误的数据格式！");
+	public static Error BAD_DATA_FORMAT = new Error("0000010", "错误的数据格式", "错误的数据格式！");
 
 	public static Error SQL_ERROR   	               = new Error("0000011", "持久化失败", "持久化失败！");
 

@@ -79,12 +79,6 @@ public class RedisCache extends AbstractCache{
     }
 
     @Override
-    protected boolean isLocal() {
-        return false;
-    }
-
-
-    @Override
     public Long getLifetime(String key) {
         Jedis jedis =  getJedis();
         Long result = jedis.ttl(key);

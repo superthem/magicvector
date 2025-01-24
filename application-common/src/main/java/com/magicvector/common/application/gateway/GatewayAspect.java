@@ -57,7 +57,7 @@ public class GatewayAspect {
 	private void restApi() {};
 
 	@Autowired
-	@Qualifier("redisCache")
+	@Qualifier("baseCache")
 	private Cache cache;
 
 	@Autowired(required = false)
@@ -202,6 +202,10 @@ public class GatewayAspect {
 		CurrentUser currentUser = null;
 		try{
 			currentUser = cache.get(StaticConfig.SESSION_CACHE_GROUP_NAME + request.getToken());
+			if(currentUser == null){
+				//尚未登录
+				return;
+			}
 		}catch (Exception ex){
 			log.warn("Fail to get user info from cache. Details:{}", ex.getMessage());
 		}

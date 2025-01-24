@@ -25,7 +25,7 @@ public class CounterServiceImpl implements CouterService {
 
     // Redis缓存模拟（假设cache是已经定义好的全局对象）
     @Autowired
-    @Qualifier("redisCache")
+    @Qualifier("baseCache")
     private Cache cache;
 
     // 定时任务执行器

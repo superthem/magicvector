@@ -17,9 +17,11 @@ import com.magicvector.common.basic.util.Asserts;
 import com.magicvector.common.basic.util.S;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
 import java.util.Map;
 
 @RestController
@@ -27,7 +29,7 @@ import java.util.Map;
 public class UserLoginControllerImpl implements UserLoginController {
 
     @Autowired
-    @Qualifier("redisCache")
+    @Qualifier("baseCache")
     private Cache cache;
 
     @Autowired(required = false)

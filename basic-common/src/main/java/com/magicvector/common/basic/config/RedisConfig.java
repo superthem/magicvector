@@ -15,8 +15,11 @@ public class RedisConfig {
     @Bean
     public JedisPool jedisPool() {
         //替换通用的redis
+        Boolean needRedis = Anole.getBoolProperty("magic.vector.redis.enabled", true);
         String redisUrl = Anole.getProperty("magic.vector.redis.host");
-        Asserts.assertTrue(S.isNotEmpty(redisUrl), Errors.CONFIG_NOT_COMPLETE,"未指定Redis地址，请通过magic.vector.redis.host指定一个redis地址。");
+        if(needRedis){
+            Asserts.assertTrue( S.isNotEmpty(redisUrl), Errors.CONFIG_NOT_COMPLETE,"未指定Redis地址，请通过magic.vector.redis.host指定一个redis地址。");
+        }
         int redisPort = Anole.getIntProperty("magic.vector.redis.port", 6379);
         int redisMaxTotal = Anole.getIntProperty("magic.vector.redis.pool.max.total", 50);
         int redisMaxIdle = Anole.getIntProperty("magic.vector.redis.pool.max.idle", 20);
