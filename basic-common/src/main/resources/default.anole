@@ -24,3 +24,11 @@ magic.vector.http.util.max-connections=200
 magic.vector.http.util.keepAlive-duration.minutes=5
 magic.vector.http.util.read-timeout.seconds=50
 magic.vector.http.util.connect-timeout.seconds=15
+
+
+# MongoDB版延时消息相关配置
+magic.vector.mongomq.enabled=false
+# 每次执行间隔的秒数
+magic.vector.mongomq.refresh.interval=5
+# mongodb的链接串
+# magic.vector.mongomq.mongodb.uri

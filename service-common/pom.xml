@@ -56,6 +56,10 @@
 		</dependency>
 		<dependency>
 			<groupId>com.magicvector</groupId>
+			<artifactId>service-api-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.magicvector</groupId>
 			<artifactId>rpc-common</artifactId>
 		</dependency>
 		<dependency>

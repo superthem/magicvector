@@ -21,7 +21,7 @@ public @interface DistributedLock {
     /**
      * 锁定成功后，最长时间。单位为毫秒ms
      */
-    long expire() default 3L;
+    long expire() default 3000L;
 
     /**
      * 等待的超时时间，超过了就不再尝试获取锁。单位为毫秒ms

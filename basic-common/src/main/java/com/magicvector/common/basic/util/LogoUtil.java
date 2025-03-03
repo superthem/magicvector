@@ -78,11 +78,12 @@ public class LogoUtil {
 	  private static String getProjectInfo(){
 		  String projectInfo = Anole.getProperty("spring.application.name");
 		  projectInfo = S.isEmpty(projectInfo) ? Anole.getProperty("artifactId"): projectInfo;
-		  projectInfo = S.isEmpty(projectInfo) ? "Magic Vector": projectInfo;
+		  projectInfo = S.isEmpty(projectInfo) ? "Magic Vector Tech Support.": projectInfo;
 		  String versionInfo = Anole.getProperty("runtime.server.version");
 		  versionInfo = S.isEmpty(versionInfo) ? Anole.getProperty("version") : versionInfo;
-		  versionInfo = S.isEmpty(versionInfo) ? "Tech Support." : versionInfo;
-		  projectInfo = projectInfo +"-"+ versionInfo;
+		  if(S.isNotEmpty(versionInfo)){
+			  projectInfo = projectInfo +"-"+ versionInfo;
+		  }
 		  return projectInfo;
 	  }
 

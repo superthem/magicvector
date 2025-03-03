@@ -46,12 +46,17 @@ public class DateUtil {
         return calendar.getTime();
     }
 
-    public static String toString(Date date) {
+    public static String toDateStr(Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         return formatter.format(date);
     }
 
-    public static Date toDate(String date) {
+    public static String toDatetimeStr(Date date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return formatter.format(date);
+    }
+
+    public static Date fromDateStr(String date) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         try {
             return formatter.parse(date);
@@ -59,5 +64,10 @@ public class DateUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static String format(Date date, String pattern) {
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        return formatter.format(date);
     }
 }

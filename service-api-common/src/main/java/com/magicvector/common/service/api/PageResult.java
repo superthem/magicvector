@@ -1,4 +1,4 @@
-package com.magicvector.common.service.model;
+package com.magicvector.common.service.api;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Data;

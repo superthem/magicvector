@@ -2,8 +2,8 @@ package com.magicvector.common.service.util;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.magicvector.common.service.model.PageQuery;
-import com.magicvector.common.service.model.PageResult;
+import com.magicvector.common.service.api.PageQuery;
+import com.magicvector.common.service.api.PageResult;
 
 public class PageUtil {
 

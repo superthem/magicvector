@@ -15,15 +15,9 @@
 		<module>rest-common</module>
 		<module>rpc-common</module>
 		<module>service-common</module>
+		<module>service-api-common</module>
 		<module>application-common</module>
 	</modules>
-
-	<repositories>
-		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
-		</repository>
-	</repositories>
 
     <url>https://www.superthem.com</url>
 	<description>魔法向量版权所有，仅供圆领客户使用，圆领-中国领先的远程工作和技能电商平台</description>
@@ -66,8 +60,8 @@
 	</licenses>
 	<developers>
 		<developer>
-			<name>tbwork</name>
-			<email>tbwork1989@163.com</email>
+			<name>superthem</name>
+			<email>superthem@163.com</email>
 			<roles>
 				<role>owner</role>
 			</roles>
@@ -252,6 +246,11 @@
 				<version>${revision}</version>
 			</dependency>
 			<dependency>
+				<groupId>com.magicvector</groupId>
+				<artifactId>service-api-common</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
 				<groupId>io.swagger</groupId>
 				<artifactId>swagger-annotations</artifactId>
 				<version>1.5.20</version>
@@ -289,7 +288,7 @@
 			<dependency>
 				<groupId>com.magicvector</groupId>
 				<artifactId>rpc-common</artifactId>
-				<version>${project.version}</version>
+				<version>${revision}</version>
 			</dependency>
 			<dependency>
 				<groupId>mysql</groupId>
@@ -316,7 +315,7 @@
 			<dependency>
 				<groupId>com.magicvector</groupId>
 				<artifactId>rest-common</artifactId>
-				<version>${project.version}</version>
+				<version>${revision}</version>
 			</dependency>
 		</dependencies>
     </dependencyManagement>
@@ -333,17 +332,6 @@
 			<artifactId>lombok</artifactId>
 		</dependency>
 	</dependencies>
-
-	<distributionManagement>
-		<repository>
-			<id>magicvector-maven-releases</id>
-			<url>http://106.14.95.226:8181/repository/maven-releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>magicvector-maven-snapshots</id>
-			<url>http://106.14.95.226:8181/repository/maven-snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
 
 	<build>
 		<plugins>

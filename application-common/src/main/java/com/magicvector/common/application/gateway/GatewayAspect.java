@@ -225,6 +225,22 @@ public class GatewayAspect {
 				GlobalContext.setExtContextVariable(key, customVariables.get(key));
 			}
 		}
+
+		if(request instanceof HttpServletRequest) {
+			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+			Enumeration<String> getParams = httpServletRequest.getParameterNames();
+			while (getParams.hasMoreElements()) {
+				String paramName = getParams.nextElement();
+				String[] paramValues = httpServletRequest.getParameterValues(paramName);
+				if (paramValues != null && paramValues.length > 0) {
+					if(paramName.startsWith("_")){
+						paramName = paramName.substring(1);
+					}
+					GlobalContext.setExtContextVariable(paramName, paramValues[0]);
+				}
+			}
+		}
+
 	}
 
 }

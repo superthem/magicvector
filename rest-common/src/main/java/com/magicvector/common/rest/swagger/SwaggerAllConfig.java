@@ -27,10 +27,10 @@ public class SwaggerAllConfig {
     }
 
     private ApiInfo apiInfo() {
-        Contact contact = new Contact("瓴里科技", "http://www.lanehub.cn", "bobo@lanehub.cn");
+        Contact contact = new Contact("魔法向量", "https://www.superthem.com", "magicvectercorp@163.com");
         return new ApiInfoBuilder()
-                .title("瓴里接口文档")
-                .description("所有接口")
+                .title("MagicVector Swagger Production")
+                .description("接口汇总，查看具体模块请在右上角选择。")
                 .contact(contact)
                 .version(Anole.getProperty("version"))
                 .build();
