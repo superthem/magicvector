@@ -6,6 +6,7 @@ import com.github.tbwork.anole.loader.util.AnoleLogger;
 import com.magicvector.common.basic.util.LogoUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -16,7 +17,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.TimeZone;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {MongoAutoConfiguration.class})
 @EnableDiscoveryClient
 @EnableSwagger2
 @Configuration

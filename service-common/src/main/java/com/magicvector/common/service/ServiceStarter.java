@@ -1,14 +1,13 @@
 package com.magicvector.common.service;
 
-import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
 import com.github.tbwork.anole.loader.AnoleApp;
 import com.github.tbwork.anole.loader.annotion.AnoleConfigLocation;
 import com.github.tbwork.anole.loader.util.AnoleLogger;
 import com.magicvector.common.basic.util.LogoUtil;
-import com.magicvector.common.rpc.config.ClientConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
@@ -16,7 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.TimeZone;
 
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, MongoAutoConfiguration.class})
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = {"${mv.base.package}", "com.magicvector"})
 @EnableSwagger2

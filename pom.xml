@@ -22,7 +22,7 @@
     <url>https://www.superthem.com</url>
 	<description>魔法向量版权所有，仅供圆领客户使用，圆领-中国领先的远程工作和技能电商平台</description>
 	<properties>
-		<revision>1.0.0-SNAPSHOT</revision>
+		<revision>1.0.1-SNAPSHOT</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>4.12</junit.version>
 		<logback.version>1.2.12</logback.version>

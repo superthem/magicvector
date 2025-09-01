@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Data
 @Slf4j
 public class MongoMQService {
-    @Value("${mv.mongomq.mongodb.uri}")
+    @Value("${mv.mongomq.mongodb.uri:}")
     private String mongoUri;
 
     private MongoCollection<Document> collection;
