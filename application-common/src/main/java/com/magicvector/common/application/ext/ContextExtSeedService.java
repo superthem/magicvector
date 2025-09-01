@@ -11,10 +11,9 @@ import java.util.Map;
 public interface ContextExtSeedService {
 
     /**
-     * @param request POST提交来的业务请求
-     * @param httpRequest Http 请求体
-     * @return
+     * 请把解析出的属性放到 GlobalContext中，或放入用户扩展属性，或放入环境变量
+     * 建议把用户相关的放入用户扩展属性，其他放入环境变量
      */
-    Map<String, String> retrieve(Request request, HttpServletRequest httpRequest);
+    void  retrieve(Request request, HttpServletRequest httpRequest);
 
 }

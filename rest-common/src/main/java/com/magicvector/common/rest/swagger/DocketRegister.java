@@ -70,7 +70,7 @@ public class DocketRegister implements BeanDefinitionRegistryPostProcessor{
 			}
         }
 
-		String builtinBasePackage = Anole.getProperty("magic.vector.builtin.controller.base.package");
+		String builtinBasePackage = Anole.getProperty("mv.builtin.controller.base.package");
 		if(S.isNotEmpty(builtinBasePackage)){
 			for (BeanDefinition bd : scanner.findCandidateComponents(builtinBasePackage)) {
 				try {

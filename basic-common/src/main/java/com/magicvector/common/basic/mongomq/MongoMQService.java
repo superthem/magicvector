@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Data
 @Slf4j
 public class MongoMQService {
-    @Value("${magic.vector.mongomq.mongodb.uri}")
+    @Value("${mv.mongomq.mongodb.uri}")
     private String mongoUri;
 
     private MongoCollection<Document> collection;
@@ -26,7 +26,7 @@ public class MongoMQService {
     @PostConstruct
     public void init() {
 
-        if(!Anole.getBoolProperty("magic.vector.mongomq.enabled", false)){
+        if(!Anole.getBoolProperty("mv.mongomq.enabled", false)){
             return;
         }
 
@@ -76,7 +76,7 @@ public class MongoMQService {
             while (running) {
                 try {
                     processMessages();
-                    int interval = Anole.getIntProperty("magic.vector.mongomq.refresh.interval", 5);
+                    int interval = Anole.getIntProperty("mv.mongomq.refresh.interval", 5);
                     Thread.sleep(interval);
                 } catch (InterruptedException e) {
                     log.error("MongoMQ 延时消息处理 发生错误: ", e);

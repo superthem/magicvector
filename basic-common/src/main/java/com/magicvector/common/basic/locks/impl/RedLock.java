@@ -21,9 +21,9 @@ public class RedLock implements DistLock{
     @Autowired
     private JedisPool jedisPool;
     private static final String LOCK_PREFIX = "REDLOCK:";
-    @Value("${magic.vector.lock.red-lock.maxRetries:20}")
+    @Value("${mv.lock.red-lock.maxRetries:20}")
     private int maxRetries;
-    @Value("${magic.vector.lock.red-lock.expireTime.default:30000}")
+    @Value("${mv.lock.red-lock.expireTime.default:30000}")
     private int defaultExpireTime;
 
     @Override

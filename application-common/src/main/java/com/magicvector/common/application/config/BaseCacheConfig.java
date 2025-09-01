@@ -15,7 +15,7 @@ public class BaseCacheConfig {
 
     @Bean("baseCache")
     public Cache baseCache() {
-        String cacheBeanName = Anole.getProperty("session.cache.impl", "redisCache");
+        String cacheBeanName = Anole.getProperty("session.cache.beanName", "redisCache");
         return applicationContext.getBean(cacheBeanName, Cache.class);
     }
 

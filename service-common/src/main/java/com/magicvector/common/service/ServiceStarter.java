@@ -18,9 +18,9 @@ import java.util.TimeZone;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @EnableDiscoveryClient
-@EnableFeignClients(basePackages = {"${magic.vector.base.package}", "com.magicvector"})
+@EnableFeignClients(basePackages = {"${mv.base.package}", "com.magicvector"})
 @EnableSwagger2
-@ComponentScan(basePackages = {"${magic.vector.base.package}", "com.magicvector"})
+@ComponentScan(basePackages = {"${mv.base.package}", "com.magicvector"})
 @AnoleConfigLocation
 public class ServiceStarter {
 

@@ -24,11 +24,11 @@ import java.util.*;
 public class AliyunOssServiceImpl implements OssService {
 
     AliyunOssServiceImpl(){
-        endpoint = Anole.getProperty("magic.vector.oss.aliyun.endpoint");
-        accessKeyId = Anole.getProperty("magic.vector.oss.aliyun.accessKey");
-        accessKeySecret = Anole.getProperty("magic.vector.oss.aliyun.accessSecret");
-        region = Anole.getProperty("magic.vector.oss.aliyun.region");
-        roleArn = Anole.getProperty("magic.vector.oss.aliyun.role.arn");
+        endpoint = Anole.getProperty("mv.oss.aliyun.endpoint");
+        accessKeyId = Anole.getProperty("mv.oss.aliyun.accessKey");
+        accessKeySecret = Anole.getProperty("mv.oss.aliyun.accessSecret");
+        region = Anole.getProperty("mv.oss.aliyun.region");
+        roleArn = Anole.getProperty("mv.oss.aliyun.role.arn");
     }
 
     private String endpoint ;

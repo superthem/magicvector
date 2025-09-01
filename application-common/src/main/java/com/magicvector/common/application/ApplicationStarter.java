@@ -20,10 +20,10 @@ import java.util.TimeZone;
 @EnableDiscoveryClient
 @EnableSwagger2
 @Configuration
-@ComponentScan(basePackages = {"${magic.vector.base.package}","com.magicvector"})
+@ComponentScan(basePackages = {"${mv.base.package}","com.magicvector"})
 @AnoleConfigLocation
 @EnableFeignClients(
-		basePackages = {"${magic.vector.base.package}","com.magicvector"}
+		basePackages = {"${mv.base.package}","com.magicvector"}
 )
 @EnableConfigurationProperties
 public class ApplicationStarter {

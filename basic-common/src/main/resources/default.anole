@@ -3,32 +3,32 @@ anole.strict.mode=false
 
 
 # OSS通用配置
-#magic.vector.oss.read.expire.time=文件访问的过期时间
-#magic.vector.oss.write.token.expire.time=OSS文件写入的临时密钥的过期时间
+#mv.oss.read.expire.time=文件访问的过期时间
+#mv.oss.write.token.expire.time=OSS文件写入的临时密钥的过期时间
 
 # 阿里云OSS配置
-#magic.vector.oss.aliyun.endpoint=
-#magic.vector.oss.aliyun.accessKey=
-#magic.vector.oss.aliyun.accessSecret=
-#magic.vector.oss.aliyun.region=cn-hangzhou
-#magic.vector.oss.aliyun.role.arn=
+#mv.oss.aliyun.endpoint=
+#mv.oss.aliyun.accessKey=
+#mv.oss.aliyun.accessSecret=
+#mv.oss.aliyun.region=cn-hangzhou
+#mv.oss.aliyun.role.arn=
 
 # 腾讯云OSS配置
-#magic.vector.oss.tencent.secret.id=
-#magic.vector.oss.tencent.secret.key=
-#magic.vector.oss.tencent.region=
+#mv.oss.tencent.secret.id=
+#mv.oss.tencent.secret.key=
+#mv.oss.tencent.region=
 
 
 # Http连接池配置
-magic.vector.http.util.max-connections=200
-magic.vector.http.util.keepAlive-duration.minutes=5
-magic.vector.http.util.read-timeout.seconds=50
-magic.vector.http.util.connect-timeout.seconds=15
+mv.http.util.max-connections=200
+mv.http.util.keepAlive-duration.minutes=5
+mv.http.util.read-timeout.seconds=50
+mv.http.util.connect-timeout.seconds=15
 
 
 # MongoDB版延时消息相关配置
-magic.vector.mongomq.enabled=false
+mv.mongomq.enabled=false
 # 每次执行间隔的秒数
-magic.vector.mongomq.refresh.interval=5
+mv.mongomq.refresh.interval=5
 # mongodb的链接串
-# magic.vector.mongomq.mongodb.uri
+# mv.mongomq.mongodb.uri

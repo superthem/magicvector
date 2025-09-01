@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.magicvector.common.application.annotation.monitor.LogFormat;
 import com.magicvector.common.application.annotation.user.Private;
 import com.magicvector.common.application.annotation.user.Public;
+import com.magicvector.common.application.ext.AuthService;
 import com.magicvector.common.application.ext.ContextExtSeedService;
 import com.magicvector.common.application.model.Request;
 import com.magicvector.common.application.model.Response;
@@ -62,8 +63,11 @@ public class GatewayAspect {
 
 	@Autowired(required = false)
 	private ContextExtSeedService contextExtSeedService;
+
+	@Autowired(required = false)
+	private AuthService authService;
 	
-	@Value("${magic.vector.gateway.log.enabled:true}")
+	@Value("${mv.gateway.log.enabled:true}")
 	private Boolean logDetailEnabled;
 
 	@Around("restApi()")
@@ -137,10 +141,12 @@ public class GatewayAspect {
 				// Seed key information to the global context.
 				seedToContext(request);
 				if(needLogin){//need login
-				 	if( GlobalContext.getCurrentUser()== null ){
+				 	if( GlobalContext.getCurrentUser() == null ){
 						throw new MagicException(Errors.USER_NOT_LOGIN);
 					}
-				 	// TODO: auth service check goes here
+					if(authService!=null){
+						authService.checkAuth();
+					}
 				}
 				response = (Response) joinPoint.proceed();
 			}
@@ -220,10 +226,7 @@ public class GatewayAspect {
 		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 		if (contextExtSeedService != null && attributes != null) {
 			HttpServletRequest httpRequest = attributes.getRequest();
-			Map<String, String> customVariables = contextExtSeedService.retrieve(request, httpRequest);
-			for (String key : customVariables.keySet()) {
-				GlobalContext.setExtContextVariable(key, customVariables.get(key));
-			}
+			contextExtSeedService.retrieve(request, httpRequest);
 		}
 
 		if(request instanceof HttpServletRequest) {
@@ -233,14 +236,45 @@ public class GatewayAspect {
 				String paramName = getParams.nextElement();
 				String[] paramValues = httpServletRequest.getParameterValues(paramName);
 				if (paramValues != null && paramValues.length > 0) {
-					if(paramName.startsWith("_")){
-						paramName = paramName.substring(1);
-					}
+					paramName = underscoreToCamelCase(paramName, false);
 					GlobalContext.setExtContextVariable(paramName, paramValues[0]);
 				}
 			}
 		}
 
 	}
+
+	/**
+	 * 将下划线分隔的字符串转换为驼峰命名
+	 *
+	 * @param input                 下划线分隔的字符串
+	 * @param capitalizeFirstLetter 是否将第一个字母大写
+	 * @return 驼峰命名的字符串
+	 */
+	public static String underscoreToCamelCase(String input, boolean capitalizeFirstLetter) {
+		if (input == null || input.isEmpty()) {
+			return input;
+		}
+
+		StringBuilder result = new StringBuilder();
+		String[] parts = input.split("_");
+
+		for (int i = 0; i < parts.length; i++) {
+			String part = parts[i];
+			if (part.isEmpty()) {
+				continue;
+			}
+
+			if (i == 0 && !capitalizeFirstLetter) {
+				result.append(part.toLowerCase());
+			} else {
+				result.append(part.substring(0, 1).toUpperCase());
+				result.append(part.substring(1).toLowerCase());
+			}
+		}
+
+		return result.toString();
+	}
+
 
 }

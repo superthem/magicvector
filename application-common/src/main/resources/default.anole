@@ -1,7 +1,8 @@
 #env:all
 anole.strict.mode=false
 user.session.cache.time=604800000
+#user.session.cache.key.prefix=
 # SSO的登录页面地址
-#magic.vector.sso.login.page.url=
+#mv.sso.login.page.url=
 
-magic.vector.builtin.controller.base.package=com.magicvector.common.application.controller
+mv.builtin.controller.base.package=com.magicvector.common.application.controller

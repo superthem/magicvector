@@ -37,9 +37,9 @@ public class TencentOssServiceImpl implements OssService {
 
 
     public TencentOssServiceImpl() {
-        secretId = Anole.getProperty("magic.vector.oss.tencent.secret.id");
-        secretKey = Anole.getProperty("magic.vector.oss.tencent.secret.key");
-        region = Anole.getProperty("magic.vector.oss.tencent.region");
+        secretId = Anole.getProperty("mv.oss.tencent.secret.id");
+        secretKey = Anole.getProperty("mv.oss.tencent.secret.key");
+        region = Anole.getProperty("mv.oss.tencent.region");
         COSCredentials credentials = new BasicCOSCredentials(secretId, secretKey);
         ClientConfig clientConfig = new ClientConfig(new Region(region));
         cosClient = new COSClient(credentials, clientConfig);
@@ -49,7 +49,7 @@ public class TencentOssServiceImpl implements OssService {
     public String uploadFile(String bucketName, String fileKey, String filePath) {
         File file = new File(filePath);
         PutObjectResult result = cosClient.putObject(bucketName, fileKey, file);
-        long expireTime = Anole.getLongProperty("magic.vector.oss.read.expire.time", 3600);
+        long expireTime = Anole.getLongProperty("mv.oss.read.expire.time", 3600);
         return generatePresignedUrl(bucketName, fileKey, expireTime); // 默认有效期为1小时
     }
 

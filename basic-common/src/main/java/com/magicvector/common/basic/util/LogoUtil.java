@@ -25,7 +25,6 @@ import java.util.Scanner;
 public class LogoUtil {
 
 
-
 	  public static void printLogo(long costTime){
 		  StringBuilder lb = new StringBuilder();
 		  try (BufferedReader reader = new BufferedReader(
