@@ -2,6 +2,7 @@ package com.magicvector.common.basic.cache.impl;
 
 import com.github.tbwork.anole.loader.Anole;
 import com.magicvector.common.basic.cache.Cache;
+import com.magicvector.common.basic.cache.RepoCallback;
 import com.magicvector.common.basic.cache.Serializer;
 import com.magicvector.common.basic.cache.impl.serializer.*;
 import com.magicvector.common.basic.errors.Errors;
@@ -13,6 +14,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 /**
@@ -20,6 +23,18 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractCache implements Cache {
 
+
+    private static final Long cachedUpdateWindow = Anole.getLongProperty("cache.update.window", 500);//ms
+    // 缓存值的包装结构
+    private static class  CacheWrapper<T> {
+        final long lastUpdateTime;
+        final T cacheValue;
+
+        CacheWrapper(long lastUpdateTime, T cacheValue) {
+            this.lastUpdateTime = lastUpdateTime;
+            this.cacheValue = cacheValue;
+        }
+    }
     protected static final String LOCAL_CAHCE_TYPE = "local";
     protected static final String DISTRIBUTED_CACHE_TYPE = "global";
 
@@ -79,11 +94,78 @@ public abstract class AbstractCache implements Cache {
         doSet(key, stringValue, lifetime);
     }
 
-
     @Override
     public void set(String key, Object value) {
         String stringValue = serialize(value);
         doSet(key, stringValue, null);
+    }
+
+
+    /**
+     * Set the value in the concurrent scenario.
+     * Use the lastUpdateTime to replace the delay-double-remove
+     * @param key
+     * @param value
+     * @param lifetime
+     */
+    @Override
+    public void concurrentSet(String key, Object value, Long lifetime) {
+        // 创建包装对象，记录当前时间
+        CacheWrapper wrapper = new CacheWrapper(System.currentTimeMillis(), value);
+        // 写入缓存（底层 doSet 会序列化）
+        String stringValue = serialize(wrapper);
+        doSet(key, stringValue, lifetime);
+    }
+
+    @Override
+    public <T> T get(String key) {
+        Object cacheValue = doGet(key, null);
+        if(cacheValue == null){
+            return null;
+        }
+        return (T) deserialize((String)cacheValue);
+    }
+
+    /**
+     * Get the value in the concurrent scenario.
+     * Use the lastUpdateTime to replace the delay-double-remove
+     *
+     * 注意：原方法签名有误，value 不应作为参数传入
+     * 这里我们假设 value 是数据库查询结果，实际中应由外部查询
+     *
+     * 更合理的做法是：concurrentGet 只负责缓存逻辑，查询由外层完成
+     */
+    @Override
+    public <T> T concurrentGet(String key, RepoCallback<T> callback) {
+        // 1. 先从缓存读
+        Object cacheWrapperFirstStr = doGet(key, null);
+        if (cacheWrapperFirstStr != null) {
+            // 如果命中，直接返回包装内的值
+            CacheWrapper<T> cacheWrapperFirst = (CacheWrapper<T>) deserialize((String)cacheWrapperFirstStr);
+            return cacheWrapperFirst.cacheValue;
+        }
+
+        // 2. 缓存 miss
+        T newValue = callback.retrieve();
+
+        // 3. 准备写回前，再读一次缓存（二次读）
+        Object cachedWrapperAgainStr = doGet(key, null);
+        if (cachedWrapperAgainStr != null) {
+            CacheWrapper<T> cacheWrapperAgain = (CacheWrapper<T>) deserialize((String)cachedWrapperAgainStr);
+            T cacheValue = cacheWrapperAgain.cacheValue;
+            long now = System.currentTimeMillis();
+            if (now - cacheWrapperAgain.lastUpdateTime < cachedUpdateWindow) { //一般来说500毫秒中
+                // 缓存刚被更新，放弃回填旧值
+                return cacheWrapperAgain.cacheValue;
+            }
+            // 否则可以安全写回
+        }
+
+        // 4. 写回缓存
+        CacheWrapper<T> newWrapper = new CacheWrapper<T>(System.currentTimeMillis(), newValue);
+        set(key, newWrapper);
+
+        return newValue;
     }
 
     @Override
@@ -130,14 +212,7 @@ public abstract class AbstractCache implements Cache {
         return (T)  deserialize((String)cacheValue);
     }
 
-    @Override
-    public <T> T get(String key) {
-        Object cacheValue = doGet(key, null);
-        if(cacheValue == null){
-            return null;
-        }
-        return (T) deserialize((String)cacheValue);
-    }
+
 
     protected abstract void doHashSet(String hashName, String key, String value);
 

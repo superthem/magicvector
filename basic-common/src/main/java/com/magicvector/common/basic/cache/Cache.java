@@ -3,6 +3,8 @@ package com.magicvector.common.basic.cache;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public interface Cache {
 
@@ -33,6 +35,23 @@ public interface Cache {
      */
     void set(String key, Object value);
 
+
+    /**
+     * Set the value in the concurrent scenario.
+     * Use the lastUpdateTime to replace the delay-double-remove
+     * @param key
+     * @param value
+     * @param lifetime
+     */
+    void concurrentSet(String key, Object value, Long lifetime);
+
+    /**
+     * Get the value in the concurrent scenario.
+     * Use the lastUpdateTime to replace the delay-double-remove
+     * @param key
+     * @param callback
+     */
+    <T> T  concurrentGet(String key, RepoCallback<T> callback);
 
     /**
      * Set channel-message to the cache
