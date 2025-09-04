@@ -1,6 +1,7 @@
 package com.magicvector.common.basic.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -9,6 +10,7 @@ import redis.clients.jedis.params.SetParams;
 import java.util.UUID;
 
 @Component
+@ConditionalOnProperty(name = "mv.redis.enabled", havingValue = "true", matchIfMissing = true)
 public class RedisLockUtils {
 
     @Autowired

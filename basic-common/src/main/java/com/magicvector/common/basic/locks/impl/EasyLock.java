@@ -1,22 +1,21 @@
 package com.magicvector.common.basic.locks.impl;
-import com.github.tbwork.anole.loader.Anole;
 import com.magicvector.common.basic.locks.DistLock;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.params.SetParams;
 
-import javax.annotation.PostConstruct;
 import java.util.UUID;
 
 @Service
 @Slf4j
-public class RedLock implements DistLock{
+@ConditionalOnProperty(name = "mv.redis.enabled", havingValue = "true", matchIfMissing = true)
+public class EasyLock implements DistLock{
 
     @Autowired
     private JedisPool jedisPool;

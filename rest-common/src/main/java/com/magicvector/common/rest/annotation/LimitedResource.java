@@ -3,7 +3,7 @@ package com.magicvector.common.rest.annotation;
 import java.lang.annotation.*;
 
 /**
- * @author shawn feng
+ * @author Tommy.Tesla
  * @description
  * @date 2022/9/9 09:22
  */

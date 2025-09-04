@@ -129,11 +129,6 @@ public abstract class AbstractCache implements Cache {
     /**
      * Get the value in the concurrent scenario.
      * Use the lastUpdateTime to replace the delay-double-remove
-     *
-     * 注意：原方法签名有误，value 不应作为参数传入
-     * 这里我们假设 value 是数据库查询结果，实际中应由外部查询
-     *
-     * 更合理的做法是：concurrentGet 只负责缓存逻辑，查询由外层完成
      */
     @Override
     public <T> T concurrentGet(String key, RepoCallback<T> callback) {
@@ -145,18 +140,32 @@ public abstract class AbstractCache implements Cache {
             return cacheWrapperFirst.cacheValue;
         }
 
+        long start = System.currentTimeMillis();
+
         // 2. 缓存 miss
         T newValue = callback.retrieve();
 
         // 3. 准备写回前，再读一次缓存（二次读）
         Object cachedWrapperAgainStr = doGet(key, null);
+
+        long end = System.currentTimeMillis();
         if (cachedWrapperAgainStr != null) {
+
             CacheWrapper<T> cacheWrapperAgain = (CacheWrapper<T>) deserialize((String)cachedWrapperAgainStr);
             T cacheValue = cacheWrapperAgain.cacheValue;
+            Long cacheUpdateTime = cacheWrapperAgain.lastUpdateTime;
+
+            // 在已经有缓存的情况下，如果当前请求是一个超时请求，就不用在更新缓存了。
+            long elapsed = end - start;
+            if(elapsed > cachedUpdateWindow * 2 && cacheUpdateTime > start){
+                //非常慢的查询，数据可能已经更改了，直接返回查询结果，不再判断是否更新缓存。
+                return newValue;
+            }
+
             long now = System.currentTimeMillis();
-            if (now - cacheWrapperAgain.lastUpdateTime < cachedUpdateWindow) { //一般来说500毫秒中
+            if (now - cacheUpdateTime < cachedUpdateWindow) { //一般来说500毫秒中
                 // 缓存刚被更新，放弃回填旧值
-                return cacheWrapperAgain.cacheValue;
+                return cacheValue;
             }
             // 否则可以安全写回
         }

@@ -4,22 +4,20 @@ import com.github.tbwork.anole.loader.Anole;
 import com.magicvector.common.basic.errors.Errors;
 import com.magicvector.common.basic.util.Asserts;
 import com.magicvector.common.basic.util.S;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 @Configuration
+@ConditionalOnProperty(name = "mv.redis.enabled", havingValue = "true", matchIfMissing = true)
 public class RedisConfig {
-
 
     @Bean
     public JedisPool jedisPool() {
-        //替换通用的redis
-        Boolean needRedis = Anole.getBoolProperty("mv.redis.enabled", true);
+
         String redisUrl = Anole.getProperty("mv.redis.host");
-        if(needRedis){
-            Asserts.assertTrue( S.isNotEmpty(redisUrl), Errors.CONFIG_NOT_COMPLETE,"未指定Redis地址，请通过mv.redis.host指定一个redis地址。");
-        }
+        Asserts.assertTrue( S.isNotEmpty(redisUrl), Errors.CONFIG_NOT_COMPLETE,"未指定Redis地址，请通过mv.redis.host指定一个redis地址。");
         int redisPort = Anole.getIntProperty("mv.redis.port", 6379);
         int redisMaxTotal = Anole.getIntProperty("mv.redis.pool.max.total", 50);
         int redisMaxIdle = Anole.getIntProperty("mv.redis.pool.max.idle", 20);

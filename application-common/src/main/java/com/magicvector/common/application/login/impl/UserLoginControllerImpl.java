@@ -17,6 +17,7 @@ import com.magicvector.common.basic.util.Asserts;
 import com.magicvector.common.basic.util.S;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +27,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
+@ConditionalOnProperty(name = "mv.embedded.login.enabled", havingValue = "true", matchIfMissing = true)
 public class UserLoginControllerImpl implements UserLoginController {
 
     @Autowired
@@ -106,6 +108,7 @@ public class UserLoginControllerImpl implements UserLoginController {
         String token = request.getToken();
         String cacheKey = getSessionKey(token);
         CurrentUser cachedUser = cache.get(cacheKey);
+
         if( cachedUser != null){
             userLoginService.processUserInfo(cachedUser);
             return  Response.success(cachedUser);

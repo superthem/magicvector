@@ -12,6 +12,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
@@ -28,6 +29,7 @@ import java.lang.reflect.Method;
 @Order(100)
 @Component
 @Slf4j
+@ConditionalOnProperty(name = "mv.redis.enabled", havingValue = "true", matchIfMissing = true)
 public class DistLockAspect {
     private ExpressionParser parser = new SpelExpressionParser();
     @Autowired

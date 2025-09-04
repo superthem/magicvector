@@ -12,6 +12,7 @@ import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -28,6 +29,7 @@ import java.util.Map;
 @Component
 @Order(30)
 @Slf4j
+@ConditionalOnProperty(name = "mv.redis.enabled", havingValue = "true", matchIfMissing = true)
 public class LoginedUVCounterAspect extends AbstractAspect{
 
     @Pointcut("@annotation(com.magicvector.common.rest.annotation.LoginedUVCounter)")

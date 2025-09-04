@@ -2,6 +2,7 @@ package com.magicvector.common.basic.cache.impl;
 
 import com.github.tbwork.anole.loader.Anole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -12,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Service("redisCache")
+@ConditionalOnProperty(name = "mv.redis.enabled", havingValue = "true", matchIfMissing = true)
 public class RedisCache extends AbstractCache{
 
     @Autowired

@@ -5,6 +5,7 @@ import com.magicvector.common.basic.cache.Cache;
 import com.magicvector.common.basic.util.S;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -15,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service
+@ConditionalOnProperty(name = "mv.redis.enabled", havingValue = "true", matchIfMissing = true)
 public class CounterServiceImpl implements CouterService {
 
     // 内存中临时存储的计数器，基于统计组和指标名进行存储
