@@ -46,7 +46,7 @@
 		<spring.boot.version>2.7.14</spring.boot.version>
 		<spring.cloud.version>2021.0.8</spring.cloud.version>
 		<swagger.version>3.0.0</swagger.version>
-		<sso.version>1.39.0</sso.version>
+		<sa.token.version>1.39.0</sa.token.version>
 		<jettison.version>1.5.4</jettison.version>
 		<mybatis.plus.version>3.5.0</mybatis.plus.version>
 		<dependencies.dependency.version>2.7.14</dependencies.dependency.version>
@@ -216,19 +216,6 @@
 				<groupId>org.apache.rocketmq</groupId>
 				<artifactId>rocketmq-spring-boot-starter</artifactId>
 				<version>2.3.1</version>
-			</dependency>
-			<!-- Sa-Token Spring Boot Starter -->
-			<dependency>
-				<groupId>cn.dev33</groupId>
-				<artifactId>sa-token-spring-boot-starter</artifactId>
-				<version>${sso.version}</version>
-			</dependency>
-
-			<!-- Sa-Token SSO 单点登录模块 -->
-			<dependency>
-				<groupId>cn.dev33</groupId>
-				<artifactId>sa-token-sso</artifactId>
-				<version>${sso.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.magicvector</groupId>

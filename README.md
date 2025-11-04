@@ -1,9 +1,6 @@
 # 设计原则
 约定>配置，简单、简单、还是简单。关于领域微服务架构，参考：[浅谈微服务体系中的分层设计和领域划分](https://tbwork.github.io/2018/10/25/layed-dev-arch/)
 
-# 使用申明
-仅限圆领客户使用，如有疑问，请联系 [魔法向量](www.superthem.com) 技术部。
-
 
 # 支持的功能
 1. Spring Boot 2.7.14 + Spring Cloud 2021.0.8
@@ -13,7 +10,7 @@
 5. 消息队列：阿里云RocketMQ 5.x/腾讯云RocketMQ 5.x
 6. 对象存储：阿里云OSS/腾讯云COS
 7. 缓存：Redis/本地缓存
-8. 自带登录和SSO单点登录接口，支持SaaS多租户用户体系
+8. 自带登录体系，通过@Public和@Private可以快速定义公开和登录型接口
 9. 全局上下文：在代码的任何地方均可快速的获取上下文的信息，比如用户，租户等
 10. 链路追踪：全链路用traceId，应用内用requestId。
 11. 数据库ORM：com.baomidou.mybatis-plus
