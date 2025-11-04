@@ -2,6 +2,7 @@ package com.magicvector.common.application.model;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import java.util.*;
 
 import javax.validation.constraints.NotBlank;
 
@@ -22,5 +23,8 @@ public class UserLoginDTO {
 
     @ApiModelProperty(value = "登录密码的MD5")
     private String passwordMd5;
+
+    @ApiModelProperty(value = "额外信息")
+    private Map<String, String> extraInfo;
 
 }

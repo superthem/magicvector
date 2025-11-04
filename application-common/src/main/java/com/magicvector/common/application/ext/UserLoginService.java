@@ -19,7 +19,7 @@ public interface UserLoginService {
      * @param code
      * @return
      */
-    public Map<String, Object> loginByPhoneAndCode(String phone, String code);
+    public Map<String, Object> loginByPhoneAndCode(String phone, String code, Map<String, String> extraInfo);
 
     /**
      * 用户名密码登录，建议对传入对密码MD5加盐做二次MD5.登录失败请抛出MagicException异常
@@ -27,7 +27,7 @@ public interface UserLoginService {
      * @param passwordMd5 前端必须加密为MD5后传入
      * @return
      */
-    public Map<String, Object> loginByUsernameAndPassword(String username, String passwordMd5);
+    public Map<String, Object> loginByUsernameAndPassword(String username, String passwordMd5, Map<String, String> extraInfo);
 
     /**
      * 邮箱+密码登录，建议对传入对密码MD5加盐做二次MD5.登录失败请抛出MagicException异常
@@ -35,7 +35,7 @@ public interface UserLoginService {
      * @param passwordMd5 前端必须加密为MD5后传入
      * @return
      */
-    public Map<String, Object> loginByEmailAndPassword(String email, String passwordMd5);
+    public Map<String, Object> loginByEmailAndPassword(String email, String passwordMd5, Map<String, String> extraInfo);
 
     /**
      * 电话号码+密码登录，建议对传入对密码MD5加盐做二次MD5.登录失败请抛出MagicException异常
@@ -43,7 +43,7 @@ public interface UserLoginService {
      * @param passwordMd5 前端必须加密为MD5后传入
      * @return
      */
-    public Map<String, Object> loginByPhoneAndPassword(String phone, String passwordMd5);
+    public Map<String, Object> loginByPhoneAndPassword(String phone, String passwordMd5, Map<String, String> extraInfo);
 
 
     /**

@@ -4,10 +4,7 @@ import com.github.tbwork.anole.loader.Anole;
 import com.magicvector.common.application.config.StaticConfig;
 import com.magicvector.common.application.ext.UserLoginService;
 import com.magicvector.common.application.login.UserLoginController;
-import com.magicvector.common.application.model.Request;
-import com.magicvector.common.application.model.Response;
-import com.magicvector.common.application.model.SsoCheckResult;
-import com.magicvector.common.application.model.UserLoginDTO;
+import com.magicvector.common.application.model.*;
 import com.magicvector.common.application.util.TokenGenerator;
 import com.magicvector.common.basic.cache.Cache;
 import com.magicvector.common.basic.errors.Errors;
@@ -15,20 +12,31 @@ import com.magicvector.common.basic.exceptions.MagicException;
 import com.magicvector.common.basic.model.CurrentUser;
 import com.magicvector.common.basic.util.Asserts;
 import com.magicvector.common.basic.util.S;
+import com.magicvector.common.rest.annotation.SwaggerModule;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 import java.util.Map;
 
-@RestController
-@RequestMapping("/user")
+@Slf4j
+@Service
+@SwaggerModule(
+    name = "内置用户服务",
+    description = "提供常见的登录/登出等功能",
+    author = "tommy.tesla"
+)
 @ConditionalOnProperty(name = "mv.embedded.login.enabled", havingValue = "true", matchIfMissing = true)
 public class UserLoginControllerImpl implements UserLoginController {
+
 
     @Autowired
     @Qualifier("baseCache")
@@ -36,6 +44,12 @@ public class UserLoginControllerImpl implements UserLoginController {
 
     @Autowired(required = false)
     private UserLoginService userLoginService;
+
+
+    @PostConstruct
+    private void init(){
+        log.info("内置用户认证服务已经启动");
+    }
 
     @Override
     public Response<CurrentUser> login(Request<UserLoginDTO> request) {
@@ -50,28 +64,26 @@ public class UserLoginControllerImpl implements UserLoginController {
         Map<String, Object> userProps = null;
         if(S.isNotEmpty(password)){
             if(S.isNotEmpty(username)){
-                userProps = userLoginService.loginByUsernameAndPassword(username, password);
+                userProps = userLoginService.loginByUsernameAndPassword(username, password, userLoginDTO.getExtraInfo());
             }
             else if(S.isNotEmpty(phone)){
-                userProps = userLoginService.loginByPhoneAndPassword(phone, password);
+                userProps = userLoginService.loginByPhoneAndPassword(phone, password, userLoginDTO.getExtraInfo());
             }
             else if(S.isNotEmpty(email)){
-                userProps = userLoginService.loginByEmailAndPassword(email, code);
+                userProps = userLoginService.loginByEmailAndPassword(email, code, userLoginDTO.getExtraInfo());
             }
             else{
                 throw new MagicException(Errors.ILLEGAL_PARAMETER, "无法检测到当前的登录验证方式！密码和验证码均为空！");
             }
         }
         else if(S.isNotEmpty(code)){
-            userProps = userLoginService.loginByPhoneAndCode(phone, code);
+            userProps = userLoginService.loginByPhoneAndCode(phone, code, userLoginDTO.getExtraInfo());
         }
         else{
             throw new MagicException(Errors.ILLEGAL_PARAMETER, "无法检测到当前的登录验证方式！密码和验证码均为空！");
         }
 
         if(userProps != null){
-
-            Asserts.assertTrue( userProps.get("id") !=null && S.isNotEmpty(userProps.get("id").toString()), "用户属性必须指定id字段，代表用户的唯一标识！");
             String token = TokenGenerator.generateToken();
             String cacheKey = getSessionKey(token);
 
@@ -86,7 +98,7 @@ public class UserLoginControllerImpl implements UserLoginController {
     }
 
     @Override
-    public Response<Boolean> logout(Request<Void> request) {
+    public Response<Boolean> logout(Request<Empty> request) {
         String token =  request.getToken();
         String cacheKey = getSessionKey(token);
         if(cache.get(cacheKey) == null){
@@ -103,7 +115,7 @@ public class UserLoginControllerImpl implements UserLoginController {
     }
 
     @Override
-    public Response<CurrentUser> getUserInfo(Request<Void> request) {
+    public Response<CurrentUser> getUserInfo(Request<Empty> request) {
 
         String token = request.getToken();
         String cacheKey = getSessionKey(token);
