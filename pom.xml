@@ -40,8 +40,6 @@
 		<anole.version>2.1.4</anole.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<!-- 指定编译器版本 -->
-		<maven.compiler.release>8</maven.compiler.release>
 		<mysql.version>8.0.25</mysql.version>
 		<spring.boot.version>2.7.14</spring.boot.version>
 		<spring.cloud.version>2021.0.8</spring.cloud.version>
@@ -67,7 +65,13 @@
 			</roles>
 			<timezone>+8</timezone>
 		</developer>
-	</developers> 
+	</developers>
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 	<dependencyManagement>
         <dependencies>
 			<dependency>
@@ -319,6 +323,8 @@
 			<artifactId>lombok</artifactId>
 		</dependency>
 	</dependencies>
+
+
 
 	<build>
 		<plugins>
