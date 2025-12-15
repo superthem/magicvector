@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
     <parent>
-		<groupId>com.magicvector</groupId>
+		<groupId>cn.magicvector</groupId>
 		<artifactId>magic-parent</artifactId>
 		<version>${revision}</version>
 	</parent>
@@ -55,15 +55,15 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.magicvector</groupId>
+			<groupId>cn.magicvector</groupId>
 			<artifactId>service-api-common</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.magicvector</groupId>
+			<groupId>cn.magicvector</groupId>
 			<artifactId>rpc-common</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.magicvector</groupId>
+			<groupId>cn.magicvector</groupId>
 			<artifactId>rest-common</artifactId>
 		</dependency>
 		<dependency>

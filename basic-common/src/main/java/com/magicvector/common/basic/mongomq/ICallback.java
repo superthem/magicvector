@@ -1,5 +1,0 @@
-package com.magicvector.common.basic.mongomq;
-
-public interface ICallback {
-    void onMessage(Object message);
-}

@@ -5,4 +5,4 @@ user.session.cache.time=604800000
 # SSO的登录页面地址
 #mv.sso.login.page.url=
 
-mv.builtin.controller.base.package=com.magicvector.common.application.controller
+mv.builtin.controller.base.package=cn.magicvector.common.application.controller

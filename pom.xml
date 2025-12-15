@@ -6,7 +6,7 @@
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.7.14</version>
 	</parent>
-	<groupId>com.magicvector</groupId>
+	<groupId>cn.magicvector</groupId>
     <artifactId>magic-parent</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
@@ -222,22 +222,22 @@
 				<version>2.3.1</version>
 			</dependency>
 			<dependency>
-				<groupId>com.magicvector</groupId>
+				<groupId>cn.magicvector</groupId>
 				<artifactId>basic-common</artifactId>
 				<version>${revision}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.magicvector</groupId>
+				<groupId>cn.magicvector</groupId>
 				<artifactId>application-common</artifactId>
 				<version>${revision}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.magicvector</groupId>
+				<groupId>cn.magicvector</groupId>
 				<artifactId>service-common</artifactId>
 				<version>${revision}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.magicvector</groupId>
+				<groupId>cn.magicvector</groupId>
 				<artifactId>service-api-common</artifactId>
 				<version>${revision}</version>
 			</dependency>
@@ -277,7 +277,7 @@
 				<version>${mybatis.plus.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.magicvector</groupId>
+				<groupId>cn.magicvector</groupId>
 				<artifactId>rpc-common</artifactId>
 				<version>${revision}</version>
 			</dependency>
@@ -304,7 +304,7 @@
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>com.magicvector</groupId>
+				<groupId>cn.magicvector</groupId>
 				<artifactId>rest-common</artifactId>
 				<version>${revision}</version>
 			</dependency>
