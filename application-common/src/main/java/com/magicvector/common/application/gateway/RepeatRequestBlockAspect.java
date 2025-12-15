@@ -12,6 +12,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.expression.EvaluationContext;
@@ -34,6 +35,7 @@ import java.lang.reflect.Method;
 public class RepeatRequestBlockAspect {
 
     @Autowired
+    @Qualifier("redissonFairLock")
     private DistLock distLock;
     private final ExpressionParser parser = new SpelExpressionParser();
 
