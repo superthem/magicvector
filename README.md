@@ -1,3 +1,5 @@
+[![](https://jitpack.io/v/cn.magicvector/magicvector.svg)](https://jitpack.io/#cn.magicvector/magicvector)
+
 # 设计原则
 约定>配置，简单、简单、还是简单。关于领域微服务架构，参考：[浅谈微服务体系中的分层设计和领域划分](https://tbwork.github.io/2018/10/25/layed-dev-arch/)
 
