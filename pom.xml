@@ -277,7 +277,7 @@
 				<version>${mybatis.plus.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>cn.magicvector</groupId>
+				<groupId>cn.magicvector.magicvector</groupId>
 				<artifactId>rpc-common</artifactId>
 				<version>${revision}</version>
 			</dependency>
