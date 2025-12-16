@@ -222,22 +222,22 @@
 				<version>2.3.1</version>
 			</dependency>
 			<dependency>
-				<groupId>cn.magicvector</groupId>
+				<groupId>cn.magicvector.magicvector</groupId>
 				<artifactId>basic-common</artifactId>
 				<version>${revision}</version>
 			</dependency>
 			<dependency>
-				<groupId>cn.magicvector</groupId>
+				<groupId>cn.magicvector.magicvector</groupId>
 				<artifactId>application-common</artifactId>
 				<version>${revision}</version>
 			</dependency>
 			<dependency>
-				<groupId>cn.magicvector</groupId>
+				<groupId>cn.magicvector.magicvector</groupId>
 				<artifactId>service-common</artifactId>
 				<version>${revision}</version>
 			</dependency>
 			<dependency>
-				<groupId>cn.magicvector</groupId>
+				<groupId>cn.magicvector.magicvector</groupId>
 				<artifactId>service-api-common</artifactId>
 				<version>${revision}</version>
 			</dependency>
@@ -304,7 +304,7 @@
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>cn.magicvector</groupId>
+				<groupId>cn.magicvector.magicvector</groupId>
 				<artifactId>rest-common</artifactId>
 				<version>${revision}</version>
 			</dependency>
