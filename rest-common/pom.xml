@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
     <parent>
-		<groupId>cn.magicvector</groupId>
+		<groupId>cn.magicvector.magicvector</groupId>
 		<artifactId>magic-parent</artifactId>
 		<version>${revision}</version>
 	</parent>
@@ -37,7 +37,7 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>cn.magicvector</groupId>
+			<groupId>cn.magicvector.magicvector</groupId>
 			<artifactId>basic-common</artifactId>
 		</dependency>
 		<dependency>
