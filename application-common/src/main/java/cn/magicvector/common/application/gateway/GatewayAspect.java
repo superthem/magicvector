@@ -53,7 +53,7 @@ import java.util.Map;
 @Component
 public class GatewayAspect {
 
-	@Pointcut("execution(cn.magicvector.common.application.model.Response cn.magicvector..*Controller.*(..)) &&"
+	@Pointcut("execution(cn.magicvector.common.application.model.Response *..*Controller.*(..)) &&"
 	         +"args(cn.magicvector.common.application.model.Request)")
 	private void restApi() {};
 
