@@ -61,6 +61,8 @@ public class UserLoginControllerImpl implements UserLoginController {
         String email = userLoginDTO.getEmail();
         String code = userLoginDTO.getCode();
         String password = userLoginDTO.getPasswordMd5();
+        String silentAuthCode = userLoginDTO.getSilentAuthCode();
+        String phoneCode = userLoginDTO.getPhoneCode();
         Map<String, Object> userProps = null;
         if(S.isNotEmpty(password)){
             if(S.isNotEmpty(username)){
@@ -74,6 +76,14 @@ public class UserLoginControllerImpl implements UserLoginController {
             }
             else{
                 throw new MagicException(Errors.ILLEGAL_PARAMETER, "无法检测到当前的登录验证方式！密码和验证码均为空！");
+            }
+        }
+        else if(S.isNotEmpty(silentAuthCode)){
+            if(S.isNotEmpty(phoneCode)){
+                userProps = userLoginService.loginByWechatAuthAndPhoneCode(silentAuthCode, phoneCode, userLoginDTO.getExtraInfo());
+            }
+            else{
+                userProps = userLoginService.loginByWechatSilentAuthCode(silentAuthCode, userLoginDTO.getExtraInfo());
             }
         }
         else if(S.isNotEmpty(code)){

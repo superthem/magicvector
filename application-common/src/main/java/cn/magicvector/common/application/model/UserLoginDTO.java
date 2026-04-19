@@ -24,6 +24,12 @@ public class UserLoginDTO {
     @ApiModelProperty(value = "登录密码的MD5")
     private String passwordMd5;
 
+    @ApiModelProperty(value = "微信静默授权码（openid/session 等换取所需 code）")
+    private String silentAuthCode;
+
+    @ApiModelProperty(value = "微信获取绑定手机号的授权码（与静默授权配合，用于自动注册登录）")
+    private String phoneCode;
+
     @ApiModelProperty(value = "额外信息")
     private Map<String, String> extraInfo;
 

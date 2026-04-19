@@ -45,6 +45,22 @@ public interface UserLoginService {
      */
     public Map<String, Object> loginByPhoneAndPassword(String phone, String passwordMd5, Map<String, String> extraInfo);
 
+    /**
+     * 微信静默授权码登录。不会自动注册用户：若找不到对应用户，实现可返回 null 或抛出 MagicException；其它失败情况请抛出 MagicException。
+     * @param silentAuthCode 用户的静默授权码
+     * @param extraInfo 附加信息（可选扩展字段）
+     * @return
+     */
+    public Map<String, Object> loginByWechatSilentAuthCode(String silentAuthCode, Map<String, String> extraInfo);
+
+    /**
+     * 微信静默授权码 + 获取绑定手机号的授权码登录。与 {@link #loginByWechatSilentAuthCode} 不同：应自动注册不存在用户。登录失败请抛出 MagicException。
+     * @param silentAuthCode 用户的静默授权码
+     * @param phoneCode 获取微信绑定手机号的授权码
+     * @param extraInfo 附加信息（可选扩展字段）
+     * @return
+     */
+    public Map<String, Object> loginByWechatAuthAndPhoneCode(String silentAuthCode, String phoneCode, Map<String, String> extraInfo);
 
     /**
      * 检查用户是否登录，如果用户没有登录，获取登录地址。
