@@ -67,4 +67,13 @@ public interface UserLoginService {
      * @return
      */
     public String getSsoLoginUrl();
+
+    /**
+     * 在会话已存在的前提下，从远端或持久层重新拉取用户属性并返回。
+     * 调用方需已校验 token 对应缓存会话有效；失败请抛出 {@link cn.magicvector.common.basic.exceptions.MagicException}。
+     *
+     * @param currentUser 当前缓存中的登录用户（含 token、既有 userProps 等）
+     * @return 最新的用户属性 Map，将用于覆盖会话中的 userProps
+     */
+    Map<String, Object> refreshAndGetUserProps(CurrentUser currentUser);
 }

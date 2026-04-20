@@ -141,4 +141,38 @@ public class UserLoginControllerImpl implements UserLoginController {
         return Response.success(failEmptyUser);
     }
 
+    @Override
+    public Response<CurrentUser> refreshAndGetUserInfo(Request<Empty> request) {
+        String token = request.getToken();
+        if (S.isEmpty(token)) {
+            return Response.fail(Errors.USER_NOT_LOGIN);
+        }
+        String cacheKey = getSessionKey(token);
+        CurrentUser cachedUser = cache.get(cacheKey);
+        if (cachedUser == null) {
+            CurrentUser failEmptyUser = new CurrentUser();
+            failEmptyUser.setLoginUrl(userLoginService.getSsoLoginUrl());
+            return Response.success(failEmptyUser);
+        }
+
+        Map<String, Object> userProps = userLoginService.refreshAndGetUserProps(cachedUser);
+        if (userProps == null) {
+            return Response.fail(Errors.LOGIC_ERROR, "刷新用户信息失败");
+        }
+
+        CurrentUser refreshed = buildSessionUser(token, userProps, cachedUser.getLoginUrl());
+        userLoginService.processUserInfo(refreshed);
+        long sessionTtl = Anole.getLongProperty("user.session.cache.time", 604800000L);
+        cache.set(cacheKey, refreshed, sessionTtl);
+        return Response.success(refreshed);
+    }
+
+    private static CurrentUser buildSessionUser(String token, Map<String, Object> userProps, String loginUrl) {
+        CurrentUser user = new CurrentUser();
+        user.setToken(token);
+        user.setUserProps(userProps);
+        user.setLoginUrl(loginUrl);
+        return user;
+    }
+
 }
