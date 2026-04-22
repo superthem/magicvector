@@ -1,5 +1,6 @@
 package cn.magicvector.common.service;
 
+import cn.magicvector.common.rpc.config.ClientConfig;
 import com.github.tbwork.anole.loader.AnoleApp;
 import com.github.tbwork.anole.loader.annotion.AnoleConfigLocation;
 import com.github.tbwork.anole.loader.util.AnoleLogger;
@@ -17,7 +18,10 @@ import java.util.TimeZone;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, MongoAutoConfiguration.class})
 @EnableDiscoveryClient
-@EnableFeignClients(basePackages = {"${mv.base.package}", "cn.magicvector"})
+@EnableFeignClients(
+		basePackages = {"${mv.base.package}", "cn.magicvector"},
+		defaultConfiguration = ClientConfig.class
+)
 @EnableSwagger2
 @ComponentScan(basePackages = {"${mv.base.package}", "cn.magicvector"})
 @AnoleConfigLocation

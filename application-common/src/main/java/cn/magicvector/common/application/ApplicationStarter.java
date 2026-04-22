@@ -1,5 +1,6 @@
 package cn.magicvector.common.application;
 
+import cn.magicvector.common.rpc.config.ClientConfig;
 import com.github.tbwork.anole.loader.AnoleApp;
 import com.github.tbwork.anole.loader.annotion.AnoleConfigLocation;
 import com.github.tbwork.anole.loader.util.AnoleLogger;
@@ -24,7 +25,8 @@ import java.util.TimeZone;
 @ComponentScan(basePackages = {"${mv.base.package}","cn.magicvector"})
 @AnoleConfigLocation
 @EnableFeignClients(
-		basePackages = {"${mv.base.package}","cn.magicvector"}
+		basePackages = {"${mv.base.package}","cn.magicvector"},
+		defaultConfiguration = ClientConfig.class
 )
 @EnableConfigurationProperties
 public class ApplicationStarter {

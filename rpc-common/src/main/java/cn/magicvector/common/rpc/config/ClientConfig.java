@@ -5,11 +5,12 @@ import cn.magicvector.common.rpc.filter.FeignClientFilter;
 import cn.magicvector.common.rpc.filter.FeignServerFilter;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import feign.codec.ErrorDecoder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+
 public class ClientConfig {
 
     @Bean("myInterceptor")
@@ -17,6 +18,10 @@ public class ClientConfig {
         return new FeignClientFilter();
     }
 
+    @Bean
+    public ErrorDecoder errorDecoder() {
+        return new ClientErrorDecoder();
+    }
 
     @Bean
     public FilterRegistrationBean feignServerFilter() {

@@ -52,17 +52,17 @@ public class Response<T> implements Serializable {
 	}
 
 	private Response(MagicException e){
-		this(e, e.getMessage());
+		this(e, e.getMagicExceptionRaw().getDetailMessage());
 	}
 
 	private Response(MagicException e, String userReadMessage){
 		this.errorCode = e.getErrorCode();
 		this.errorMessages = new ArrayList<>();
 		if(S.isNotEmpty(userReadMessage)){
-			this.errorMessages.add(e.getError().getUserReadInfo()+" 详情:"+userReadMessage);
+			this.errorMessages.add(userReadMessage);
 		}
 		else{
-			this.errorMessages.add(e.getError().getUserReadInfo());
+			this.errorMessages.add(e.getMagicExceptionRaw().getError().getUserReadInfo());
 		}
 		this.success = false;
 	}

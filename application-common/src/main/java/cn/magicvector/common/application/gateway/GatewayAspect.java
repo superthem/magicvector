@@ -151,7 +151,7 @@ public class GatewayAspect {
 				response = (Response) joinPoint.proceed();
 			}
 			catch (MagicException e){
-				logger.error("Call {} failed. Message:{}", methodName, e.getMessage(), e);
+				logger.error("Call {} failed. Message:{}", methodName, e.getMagicExceptionRaw().getDetailMessage(), e);
 				response = Response.fail(e);
 			}
 			catch (Exception e){
