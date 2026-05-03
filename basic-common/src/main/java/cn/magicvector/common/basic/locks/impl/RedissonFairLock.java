@@ -64,7 +64,7 @@ public class RedissonFairLock implements DistLock {
     @Override
     public boolean unlock(String resourceId, String lockValue) {
         String lockKey = LOCK_PREFIX + resourceId;
-        RLock lock = redissonClient.getLock(lockKey);
+        RLock lock = redissonClient.getFairLock(lockKey);
 
         try {
             // 注意：Redisson 的 unlock() 不需要传 lockValue

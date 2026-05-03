@@ -77,7 +77,7 @@ public class RepeatRequestBlockAspect {
             return point.proceed();
         } finally {
             // 无论执行过程中是否抛出异常，最后都要释放锁
-            distLock.unlock(resource, lock);
+            distLock.unlock(lockTarget, lock);
         }
     }
 }

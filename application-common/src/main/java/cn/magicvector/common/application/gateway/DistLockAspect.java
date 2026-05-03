@@ -63,7 +63,7 @@ public class DistLockAspect {
             resource = method.getName();  // 使用默认的methodName作为resource
         }
         String lockTarget =  "DistributedLock:" + resource;
-        String lock = this.distLock.lock(lockTarget, expire, waitTime);
+        String lock = this.distLock.lock(lockTarget, waitTime, expire);
         if (lock == null) {
             log.warn("获取分布式锁失败,class={},method={},resourceId={}", className, method.getName(), resource);
             throw new MagicException(Errors.DISTRIBUTED_LOCK_TIMEOUT_ERROR, lockPoint.message());
@@ -74,7 +74,7 @@ public class DistLockAspect {
             return point.proceed();
         } finally {
             // 无论执行过程中是否抛出异常，最后都要释放锁
-            distLock.unlock(resource, lock);
+            distLock.unlock(lockTarget, lock);
         }
     }
 }
