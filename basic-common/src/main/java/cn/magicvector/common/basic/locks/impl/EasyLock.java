@@ -39,18 +39,21 @@ public class EasyLock implements DistLock{
     public String lock(String resourceId, long wait, long expire) {
         String lockKey = LOCK_PREFIX + resourceId;
         String lockValue = UUID.randomUUID().toString();
-        long endTime = System.currentTimeMillis() + wait;
+        long deadline = System.currentTimeMillis() + wait;
 
         try (Jedis jedis = jedisPool.getResource()) {
             SetParams setParams = new SetParams().nx().px(expire);
-            while (System.currentTimeMillis() < endTime) {
+            while (true) {
                 String result = jedis.set(lockKey, lockValue, setParams);
                 if ("OK".equals(result)) {
                     log.info("Lock acquired for resource: {}", resourceId);
                     return lockValue;
                 }
+                if (System.currentTimeMillis() >= deadline) {
+                    break;
+                }
                 try {
-                    Thread.sleep(50); // 重试前等待
+                    Thread.sleep(50);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     log.error("Thread interrupted while waiting for lock on resource: {}", resourceId);

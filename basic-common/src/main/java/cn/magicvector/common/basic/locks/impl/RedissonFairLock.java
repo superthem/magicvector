@@ -87,7 +87,7 @@ public class RedissonFairLock implements DistLock {
     @Override
     public boolean isLocked(String resourceId) {
         String lockKey = LOCK_PREFIX + resourceId;
-        RLock lock = redissonClient.getLock(lockKey);
+        RLock lock = redissonClient.getFairLock(lockKey);
         return lock.isLocked();
     }
 }
