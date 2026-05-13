@@ -1,6 +1,5 @@
 package cn.magicvector.common.basic.cache.impl;
 
-import com.github.tbwork.anole.loader.Anole;
 import cn.magicvector.common.basic.cache.Cache;
 import cn.magicvector.common.basic.cache.RepoCallback;
 import cn.magicvector.common.basic.cache.Serializer;
@@ -14,6 +13,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
@@ -23,8 +24,18 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractCache implements Cache {
 
-
-    private static final Long cachedUpdateWindow = Anole.getLongProperty("cache.update.window", 500);//ms
+    /** 毫秒；与 Anole 解耦，使用 JVM 系统属性 {@code -Dcache.update.window=500}，未设置则默认 500 */
+    private static long getCachedUpdateWindowMs() {
+        String v = System.getProperty("cache.update.window");
+        if (v == null || v.isEmpty()) {
+            return 500L;
+        }
+        try {
+            return Long.parseLong(v.trim());
+        } catch (NumberFormatException e) {
+            return 500L;
+        }
+    }
     // 缓存值的包装结构
     private static class  CacheWrapper<T> {
         final long lastUpdateTime;
@@ -39,6 +50,11 @@ public abstract class AbstractCache implements Cache {
     protected static final String DISTRIBUTED_CACHE_TYPE = "global";
 
     private Serializer serializer;
+
+    /**
+     * 同一 key 未命中时，仅一个线程执行 callback；其它线程等待该次加载结果（进程内防击穿）。
+     */
+    private final ConcurrentHashMap<String, CompletableFuture<?>> inFlightLoads = new ConcurrentHashMap<>();
 
     public AbstractCache(){
         serializer = SerializerFactory.getSerializer();
@@ -57,7 +73,7 @@ public abstract class AbstractCache implements Cache {
     public static class SerializerFactory{
 
         public static Serializer getSerializer(){
-            String name = Anole.getProperty("cache.serializer","kryo");
+            String name = System.getProperty("cache.serializer", "kryo");
             return getSerializer(name);
         }
 
@@ -140,6 +156,38 @@ public abstract class AbstractCache implements Cache {
             return cacheWrapperFirst.cacheValue;
         }
 
+        CompletableFuture<T> newcomer = new CompletableFuture<>();
+        @SuppressWarnings("unchecked")
+        CompletableFuture<T> leaderOrSelf = (CompletableFuture<T>) inFlightLoads.putIfAbsent(key, newcomer);
+
+        if (leaderOrSelf != null) {
+            return leaderOrSelf.join();
+        }
+
+        try {
+            // 成为 leader 后、加载前再读一次：其它线程可能已写入同 key
+            Object filledWhileWaiting = doGet(key, null);
+            if (filledWhileWaiting != null) {
+                CacheWrapper<T> w = (CacheWrapper<T>) deserialize((String) filledWhileWaiting);
+                T hit = w.cacheValue;
+                newcomer.complete(hit);
+                return hit;
+            }
+            T loaded = loadThroughAfterMiss(key, callback);
+            newcomer.complete(loaded);
+            return loaded;
+        } catch (Throwable t) {
+            newcomer.completeExceptionally(t);
+            throw t;
+        } finally {
+            inFlightLoads.remove(key, newcomer);
+        }
+    }
+
+    /**
+     * 缓存未命中后：单线程执行加载、二次读与写回（由 concurrentGet 的 in-flight 保证同 key 仅此路径并发一条）。
+     */
+    private <T> T loadThroughAfterMiss(String key, RepoCallback<T> callback) {
         long start = System.currentTimeMillis();
 
         // 2. 缓存 miss
@@ -157,22 +205,21 @@ public abstract class AbstractCache implements Cache {
 
             // 在已经有缓存的情况下，如果当前请求是一个超时请求，就不用在更新缓存了。
             long elapsed = end - start;
-            if(elapsed > cachedUpdateWindow * 2 && cacheUpdateTime > start){
+            if(elapsed > getCachedUpdateWindowMs() * 2 && cacheUpdateTime > start){
                 //非常慢的查询，数据可能已经更改了，直接返回查询结果，不再判断是否更新缓存。
                 return newValue;
             }
 
             long now = System.currentTimeMillis();
-            if (now - cacheUpdateTime < cachedUpdateWindow) { //一般来说500毫秒中
+            if (now - cacheUpdateTime < getCachedUpdateWindowMs()) { //一般来说500毫秒中
                 // 缓存刚被更新，放弃回填旧值
                 return cacheValue;
             }
             // 否则可以安全写回
         }
 
-        // 4. 写回缓存
-        CacheWrapper<T> newWrapper = new CacheWrapper<T>(System.currentTimeMillis(), newValue);
-        set(key, newWrapper);
+        // 4. 写回缓存（与 concurrentSet 一致：内部 CacheWrapper + lastUpdateTime）
+        concurrentSet(key, newValue, null);
 
         return newValue;
     }
