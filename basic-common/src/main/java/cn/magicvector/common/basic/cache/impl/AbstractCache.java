@@ -148,6 +148,11 @@ public abstract class AbstractCache implements Cache {
      */
     @Override
     public <T> T concurrentGet(String key, RepoCallback<T> callback) {
+        return concurrentGet(key, callback, null);
+    }
+
+    @Override
+    public <T> T concurrentGet(String key, RepoCallback<T> callback, Long lifetime) {
         // 1. 先从缓存读
         Object cacheWrapperFirstStr = doGet(key, null);
         if (cacheWrapperFirstStr != null) {
@@ -173,7 +178,7 @@ public abstract class AbstractCache implements Cache {
                 newcomer.complete(hit);
                 return hit;
             }
-            T loaded = loadThroughAfterMiss(key, callback);
+            T loaded = loadThroughAfterMiss(key, callback, lifetime);
             newcomer.complete(loaded);
             return loaded;
         } catch (Throwable t) {
@@ -187,7 +192,7 @@ public abstract class AbstractCache implements Cache {
     /**
      * 缓存未命中后：单线程执行加载、二次读与写回（由 concurrentGet 的 in-flight 保证同 key 仅此路径并发一条）。
      */
-    private <T> T loadThroughAfterMiss(String key, RepoCallback<T> callback) {
+    private <T> T loadThroughAfterMiss(String key, RepoCallback<T> callback, Long lifetime) {
         long start = System.currentTimeMillis();
 
         // 2. 缓存 miss
@@ -219,7 +224,7 @@ public abstract class AbstractCache implements Cache {
         }
 
         // 4. 写回缓存（与 concurrentSet 一致：内部 CacheWrapper + lastUpdateTime）
-        concurrentSet(key, newValue, null);
+        concurrentSet(key, newValue, lifetime);
 
         return newValue;
     }

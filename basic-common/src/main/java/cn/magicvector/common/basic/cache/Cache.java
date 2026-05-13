@@ -54,6 +54,15 @@ public interface Cache {
     <T> T  concurrentGet(String key, RepoCallback<T> callback);
 
     /**
+     * Same as {@link #concurrentGet(String, RepoCallback)} but TTL applied when loading and
+     * writing back after a miss (seconds; null means no expiry / backend default, same as
+     * {@link #concurrentSet(String, Object, Long)}).
+     *
+     * @param lifetime key TTL on write-back after cache miss; ignored on cache hit
+     */
+    <T> T concurrentGet(String key, RepoCallback<T> callback, Long lifetime);
+
+    /**
      * Set channel-message to the cache
      *
      * @param channel   the channel
