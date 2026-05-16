@@ -238,4 +238,14 @@ public class LocalCache extends AbstractCache {
         }
         return result;
     }
+
+    @Override
+    public Long lpush(String key, String... values) {
+        throw new MagicException(Errors.NOT_SUPPORTED);
+    }
+
+    @Override
+    public String brpop(String key, int timeoutSeconds) {
+        throw new MagicException(Errors.NOT_SUPPORTED);
+    }
 }

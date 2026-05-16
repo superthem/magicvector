@@ -274,8 +274,29 @@ public class RedisCache extends AbstractCache{
         return res;
     }
 
+    @Override
+    public Long lpush(String key, String... values) {
+        Jedis jedis = getJedis();
+        try {
+            return jedis.lpush(key, values);
+        } finally {
+            jedis.close();
+        }
+    }
 
-
+    @Override
+    public String brpop(String key, int timeoutSeconds) {
+        Jedis jedis = getJedis();
+        try {
+            List<String> tuple = jedis.brpop(timeoutSeconds, key);
+            if (tuple == null || tuple.size() < 2) {
+                return null;
+            }
+            return tuple.get(1);
+        } finally {
+            jedis.close();
+        }
+    }
 
 
     private Jedis getJedis(){

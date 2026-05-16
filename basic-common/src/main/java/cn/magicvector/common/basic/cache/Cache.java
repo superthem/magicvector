@@ -3,8 +3,6 @@ package cn.magicvector.common.basic.cache;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 public interface Cache {
 
@@ -256,5 +254,23 @@ public interface Cache {
      * @return
      */
     Long sMove(String sourceKey, String destKey, String member);
+
+    /**
+     * Redis LPUSH：将元素从左端压入列表；与 {@link #brpop} 配合形成 FIFO 队列。
+     *
+     * @param key    列表 key
+     * @param values 待压入的字符串（与 Redis 可变参顺序一致）
+     * @return 压入后的列表长度
+     */
+    Long lpush(String key, String... values);
+
+    /**
+     * Redis BRPOP：阻塞地从列表尾部弹出一个元素，通常与 {@link #lpush} 配合使用。
+     *
+     * @param key               列表 key
+     * @param timeoutSeconds    阻塞超时（秒）；0 表示一直阻塞直至有元素（与 Redis BRPOP 一致）
+     * @return 弹出的元素；超时或未取到则为 null
+     */
+    String brpop(String key, int timeoutSeconds);
 
 }
