@@ -245,6 +245,11 @@ public class LocalCache extends AbstractCache {
     }
 
     @Override
+    public Long rpush(String key, String... values) {
+        throw new MagicException(Errors.NOT_SUPPORTED);
+    }
+
+    @Override
     public String brpop(String key, int timeoutSeconds) {
         throw new MagicException(Errors.NOT_SUPPORTED);
     }

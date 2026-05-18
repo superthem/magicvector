@@ -265,6 +265,15 @@ public interface Cache {
     Long lpush(String key, String... values);
 
     /**
+     * Redis RPUSH：将元素从右端（尾部）压入列表。
+     *
+     * @param key    列表 key
+     * @param values 待压入的字符串（与 Redis 可变参顺序一致）
+     * @return 压入后的列表长度
+     */
+    Long rpush(String key, String... values);
+
+    /**
      * Redis BRPOP：阻塞地从列表尾部弹出一个元素，通常与 {@link #lpush} 配合使用。
      *
      * @param key               列表 key
