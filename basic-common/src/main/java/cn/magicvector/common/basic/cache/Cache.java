@@ -273,4 +273,14 @@ public interface Cache {
      */
     String brpop(String key, int timeoutSeconds);
 
+    /**
+     * Redis LPOS：判断列表 key 中是否存在与给定元素相等的成员（从左起首次匹配）。
+     * 需要服务端 Redis 6.0.6+ 支持 LPOS 命令。
+     *
+     * @param key     列表 key
+     * @param element 待查找的元素（字符串二进制安全相等）
+     * @return 存在则为 {@code true}；key 不存在、非列表类型或不存在该元素则为 {@code false}
+     */
+    Boolean lcontains(String key, String element);
+
 }

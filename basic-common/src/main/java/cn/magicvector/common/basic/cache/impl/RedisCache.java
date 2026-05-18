@@ -298,6 +298,17 @@ public class RedisCache extends AbstractCache{
         }
     }
 
+    @Override
+    public Boolean lcontains(String key, String element) {
+        Jedis jedis = getJedis();
+        try {
+            Long index = jedis.lpos(key, element);
+            return index != null;
+        } finally {
+            jedis.close();
+        }
+    }
+
 
     private Jedis getJedis(){
         return  jedisPool.getResource();

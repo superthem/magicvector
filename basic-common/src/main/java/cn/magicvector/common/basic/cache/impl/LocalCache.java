@@ -248,4 +248,9 @@ public class LocalCache extends AbstractCache {
     public String brpop(String key, int timeoutSeconds) {
         throw new MagicException(Errors.NOT_SUPPORTED);
     }
+
+    @Override
+    public Boolean lcontains(String key, String element) {
+        throw new MagicException(Errors.NOT_SUPPORTED);
+    }
 }
