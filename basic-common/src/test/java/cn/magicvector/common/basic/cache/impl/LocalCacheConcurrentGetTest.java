@@ -19,9 +19,12 @@ import java.util.concurrent.atomic.AtomicReference;
  * 本测试不启动 Anole：{@link AbstractCache} 在 Anole 未就绪时使用默认窗口与 kryo。
  * <p>
  * Maven：{@code mvn -pl basic-common test -Dtest=LocalCacheConcurrentGetTest}<br>
- * 演示日志：运行 {@link #main(String[])}（批量请求进入、等待、返回与角色）。
+ * 演示日志：运行 {@link #main(String[])}（含 {@link #demonstrateLifetimeTtlSeconds()} TTL 自测）。
  */
 public class LocalCacheConcurrentGetTest {
+
+    /** main 自测用：短 TTL，便于肉眼等 sleep */
+    private static final int TTL_VERIFY_SECONDS = 2;
 
     private static final int STRESS_THREADS = 128;
     private static final int STRESS_ROUNDS = 5;
@@ -184,6 +187,61 @@ public class LocalCacheConcurrentGetTest {
         }
     }
 
+    /**
+     * 手跑 main 时验证：{@code concurrentGet(..., ttlSec)} 写入后，{@code ttlSec} 秒内命中不触发 retrieve，
+     * 过期后再调应重新 retrieve。
+     */
+    public static void demonstrateLifetimeTtlSeconds() throws InterruptedException {
+        System.out.println("========== lifetime（秒）TTL： miss → hit → 过期后再 miss ==========");
+        LocalCache cache = new LocalCache();
+        String key = "ttl-verify-" + System.nanoTime();
+        AtomicInteger loads = new AtomicInteger(0);
+
+        String v1 = cache.concurrentGet(key, new RepoCallback<String>() {
+            @Override
+            public String retrieve() {
+                int n = loads.incrementAndGet();
+                System.out.println("[ttl] retrieve 执行，第 " + n + " 次（应只见 1、2 两次）");
+                return "payload-" + n;
+            }
+        }, (long) TTL_VERIFY_SECONDS);
+        System.out.println("[ttl] 第 1 次返回: " + v1 + "，loads=" + loads.get() + " 预期=1");
+
+        String v2 = cache.concurrentGet(key, new RepoCallback<String>() {
+            @Override
+            public String retrieve() {
+                loads.incrementAndGet();
+                return "BUG-should-not-retrieve";
+            }
+        }, (long) TTL_VERIFY_SECONDS);
+        System.out.println("[ttl] 第 2 次（立即）返回: " + v2 + "，loads=" + loads.get() + " 预期=1，与第1次同值");
+
+        Long remain = cache.getLifetime(key);
+        System.out.println("[ttl] getLifetime（秒）≈ " + remain + "（刚写入时应 >0）");
+
+        int waitSec = TTL_VERIFY_SECONDS + 1;
+        System.out.println("[ttl] sleep " + waitSec + "s 等 key 过期…");
+        Thread.sleep(waitSec * 1000L);
+
+        String v3 = cache.concurrentGet(key, new RepoCallback<String>() {
+            @Override
+            public String retrieve() {
+                int n = loads.incrementAndGet();
+                System.out.println("[ttl] retrieve 执行，第 " + n + " 次");
+                return "payload-" + n;
+            }
+        }, (long) TTL_VERIFY_SECONDS);
+        System.out.println("[ttl] 第 3 次（过期后）返回: " + v3 + "，loads=" + loads.get() + " 预期=2");
+
+        if (loads.get() != 2) {
+            throw new IllegalStateException("lifetime 未按预期生效：期望 retrieve 共 2 次，实际 " + loads.get());
+        }
+        if (!v1.equals(v2) || v1.equals(v3)) {
+            throw new IllegalStateException("值异常：预期 v1==v2 且 v3 为二次加载");
+        }
+        System.out.println("[ttl] OK");
+    }
+
     private static void logLine(String msg) {
         long now = System.currentTimeMillis();
         System.out.printf("[%1$tT.%1$tL] %2$s%n", now, msg);
@@ -198,6 +256,8 @@ public class LocalCacheConcurrentGetTest {
     }
 
     public static void main(String[] args) throws Exception {
+        demonstrateLifetimeTtlSeconds();
+
         demonstrateBatchRequestsWithWaitLogs();
 
         LocalCacheConcurrentGetTest t = new LocalCacheConcurrentGetTest();

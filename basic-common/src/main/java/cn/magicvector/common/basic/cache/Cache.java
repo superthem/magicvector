@@ -21,7 +21,7 @@ public interface Cache {
      *
      * @param key      the key
      * @param value    the value.
-     * @param lifetime the lifetime of key-value ( seconds )
+     * @param lifetime 过期时间，单位：<b>秒</b>（与 Redis SETEX / EXPIRE 一致）。
      */
     void set(String key, Object value, long lifetime);
 
@@ -37,9 +37,10 @@ public interface Cache {
     /**
      * Set the value in the concurrent scenario.
      * Use the lastUpdateTime to replace the delay-double-remove
-     * @param key
-     * @param value
-     * @param lifetime
+     *
+     * @param key      cache key
+     * @param value    value to store
+     * @param lifetime 过期时间，单位：<b>秒</b>；{@code null} 表示不设过期（行为依后端，如 Redis 的 SET 无 EX）。
      */
     void concurrentSet(String key, Object value, Long lifetime);
 
@@ -53,10 +54,10 @@ public interface Cache {
 
     /**
      * Same as {@link #concurrentGet(String, RepoCallback)} but TTL applied when loading and
-     * writing back after a miss (seconds; null means no expiry / backend default, same as
-     * {@link #concurrentSet(String, Object, Long)}).
+     * writing back after a miss. {@code null} means no expiry / backend default, same as
+     * {@link #concurrentSet(String, Object, Long)}.
      *
-     * @param lifetime key TTL on write-back after cache miss; ignored on cache hit
+     * @param lifetime 仅在缓存<b>未命中</b>且回写时作为 key 的过期时间，单位：<b>秒</b>；命中时不会用到；{@code null} 表示不设过期。
      */
     <T> T concurrentGet(String key, RepoCallback<T> callback, Long lifetime);
 
@@ -133,7 +134,7 @@ public interface Cache {
      * Get value of the given key and reset the expire time.
      *
      * @param key      the given key
-     * @param lifetime the new lifetime of key in seconds.
+     * @param lifetime 读取成功后为该 key 重置的过期时间，单位：<b>秒</b>（如 Redis EXPIRE）。
      * @param <T>      the value's type
      * @return the value object.
      */
@@ -141,10 +142,10 @@ public interface Cache {
 
 
     /**
-     * The the rest lifetime of given key in seconds.
+     * 查询 key 剩余存活时间。
      *
      * @param key the given key
-     * @return the rest lifetime in seconds.
+     * @return 剩余过期时间，单位：<b>秒</b>；永不过期等语义与 Redis TTL 一致。
      */
     Long getLifetime(String key);
 

@@ -26,6 +26,9 @@ public class RedisCache extends AbstractCache{
         jedis.close();
     }
 
+    /**
+     * @param lifetime 过期时间，单位：<b>秒</b>；非空时使用 {@code SETEX}；{@code null} 使用无过期的 {@code SET}。
+     */
     @Override
     protected void doSet(String key, String value, Long lifetime) {
         Jedis jedis =  getJedis();
@@ -69,6 +72,9 @@ public class RedisCache extends AbstractCache{
         return result;
     }
 
+    /**
+     * @param lifetime 非 {@code null} 时在读后对本 key 执行 {@code EXPIRE}，单位：<b>秒</b>；{@code null} 表示只读、不续期。
+     */
     @Override
     protected Object doGet(String key, Long lifetime) {
         Jedis jedis =  getJedis();
@@ -80,6 +86,9 @@ public class RedisCache extends AbstractCache{
         return result;
     }
 
+    /**
+     * @return 剩余过期时间，单位：<b>秒</b>（与 Jedis {@code TTL} 一致；无 key / 永不过期等语义同 Redis）。
+     */
     @Override
     public Long getLifetime(String key) {
         Jedis jedis =  getJedis();

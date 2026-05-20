@@ -19,7 +19,21 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class LocalCache extends AbstractCache {
 
-    private final Cache<String, String> innerCache;
+    /**
+     * Guava {@link CacheBuilder#expireAfterWrite} 只能全局统一，无法按 key 设置不同 TTL。
+     * 因此在条目中自带过期时间，读时校验；{@code expireAtMillis == Long.MAX_VALUE} 表示与 Redis 无 EX 一致，不设时钟过期。
+     */
+    private static final class ExpiringEntry {
+        final long expireAtMillis;
+        final String payload;
+
+        ExpiringEntry(long expireAtMillis, String payload) {
+            this.expireAtMillis = expireAtMillis;
+            this.payload = payload;
+        }
+    }
+
+    private final Cache<String, ExpiringEntry> innerCache;
     private final Map<String, Map<String, String>> hashCache = new ConcurrentHashMap<>();
     private final Map<String, Set<String>> setCache = new ConcurrentHashMap<>();
 
@@ -27,11 +41,11 @@ public class LocalCache extends AbstractCache {
         // 获取 JVM 的最大可用内存
         long maxMemory = Runtime.getRuntime().maxMemory();
         long cacheMaxMemory = maxMemory / 5;
-        // 创建带有最大内存限制的缓存
+        // 创建带有最大内存限制的缓存；逐条过期时间见 ExpiringEntry，不再使用全局 expireAfterWrite
         innerCache = CacheBuilder.newBuilder()
                 .maximumWeight(cacheMaxMemory)
-                .weigher((String key, String value) -> getObjectSize(key) + getObjectSize(value)) // 计算条目所占内存的权重
-                .expireAfterWrite(60, TimeUnit.MINUTES) // 设置默认过期时间
+                .weigher((String key, ExpiringEntry entry) ->
+                        getObjectSize(key) + 16 + getObjectSize(entry.payload))
                 .build();
     }
 
@@ -42,17 +56,26 @@ public class LocalCache extends AbstractCache {
         return 8 + str.length() * 2; // 字符串对象头 + 每个字符 2 字节
     }
 
+    private static long expiryMillisFromLifetimeSeconds(Long lifetimeSeconds) {
+        if (lifetimeSeconds == null) {
+            return Long.MAX_VALUE;
+        }
+        long add = TimeUnit.SECONDS.toMillis(Math.max(0L, lifetimeSeconds));
+        long candidate = System.currentTimeMillis() + add;
+        return candidate < 0 ? Long.MAX_VALUE : candidate;
+    }
+
     @Override
     protected void doHashSet(String hashName, String key, String value) {
         hashCache.computeIfAbsent(hashName, k -> new ConcurrentHashMap<>()).put(key, value);
     }
 
+    /**
+     * @param lifetime 过期时间（<b>秒</b>）；{@code null} 表示不设时钟过期（仅受 Guava 权重驱逐影响），与 Redis 无 TTL 相近。
+     */
     @Override
     protected void doSet(String key, String value, Long lifetime) {
-        if (lifetime != null) {
-            log.warn("LocalCache does not support setting individual TTL for keys. Ignoring lifetime.");
-        }
-        innerCache.put(key, value);
+        innerCache.put(key, new ExpiringEntry(expiryMillisFromLifetimeSeconds(lifetime), value));
     }
 
     @Override
@@ -86,19 +109,48 @@ public class LocalCache extends AbstractCache {
         return new HashMap<>(hashCache.getOrDefault(hashName, Collections.emptyMap()));
     }
 
+    /**
+     * @param lifetime 非 {@code null} 时：命中且未过期则按该秒数重写过期时间（对齐 Redis 读后续期）；{@code null} 则只读。
+     */
     @Override
     protected Object doGet(String key, Long lifetime) {
-        if (lifetime != null) {
-            log.warn("LocalCache does not support setting individual TTL for keys. Ignoring lifetime.");
+        ExpiringEntry entry = innerCache.getIfPresent(key);
+        if (entry == null) {
+            return null;
         }
-        return innerCache.getIfPresent(key);
+        long now = System.currentTimeMillis();
+        if (now >= entry.expireAtMillis) {
+            innerCache.invalidate(key);
+            return null;
+        }
+        if (lifetime != null) {
+            ExpiringEntry renewed = new ExpiringEntry(expiryMillisFromLifetimeSeconds(lifetime), entry.payload);
+            innerCache.put(key, renewed);
+            return renewed.payload;
+        }
+        return entry.payload;
     }
 
 
+    /**
+     * @return 剩余秒数；无 key 或已过期为 {@code null}；无时钟过期（与 Redis TTL -1 类似）为 {@code -1L}。
+     */
     @Override
     public Long getLifetime(String key) {
-        // 本地缓存不支持获取过期时间
-        throw new MagicException(Errors.NOT_SUPPORTED);
+        ExpiringEntry entry = innerCache.getIfPresent(key);
+        if (entry == null) {
+            return null;
+        }
+        long now = System.currentTimeMillis();
+        if (now >= entry.expireAtMillis) {
+            innerCache.invalidate(key);
+            return null;
+        }
+        if (entry.expireAtMillis == Long.MAX_VALUE) {
+            return -1L;
+        }
+        long remainMs = entry.expireAtMillis - now;
+        return Math.max(0L, (remainMs + 999L) / 1000L);
     }
 
     @Override

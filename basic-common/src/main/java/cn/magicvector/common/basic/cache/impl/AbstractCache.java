@@ -104,6 +104,9 @@ public abstract class AbstractCache implements Cache {
         doHashSet(hashName, key, serializedValue);
     }
 
+    /**
+     * @param lifetime 过期时间，单位：<b>秒</b>；传入 {@link #doSet(String, String, Long)}。
+     */
     @Override
     public void set(String key, Object value, long lifetime) {
         String stringValue = serialize(value);
@@ -120,9 +123,10 @@ public abstract class AbstractCache implements Cache {
     /**
      * Set the value in the concurrent scenario.
      * Use the lastUpdateTime to replace the delay-double-remove
-     * @param key
-     * @param value
-     * @param lifetime
+     *
+     * @param key      cache key
+     * @param value    写入的业务值（内部会包一层 {@link CacheWrapper} 再序列化）
+     * @param lifetime 过期时间，单位：<b>秒</b>；{@code null} 表示不设过期（依 {@link #doSet(String, String, Long)} 实现）。
      */
     @Override
     public void concurrentSet(String key, Object value, Long lifetime) {
@@ -151,6 +155,9 @@ public abstract class AbstractCache implements Cache {
         return concurrentGet(key, callback, null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T concurrentGet(String key, RepoCallback<T> callback, Long lifetime) {
         // 1. 先从缓存读
@@ -191,6 +198,8 @@ public abstract class AbstractCache implements Cache {
 
     /**
      * 缓存未命中后：单线程执行加载、二次读与写回（由 concurrentGet 的 in-flight 保证同 key 仅此路径并发一条）。
+     *
+     * @param lifetime 回写 {@link #concurrentSet} 时使用的过期时间，单位：<b>秒</b>；{@code null} 表示不设过期。
      */
     private <T> T loadThroughAfterMiss(String key, RepoCallback<T> callback, Long lifetime) {
         long start = System.currentTimeMillis();
@@ -264,6 +273,9 @@ public abstract class AbstractCache implements Cache {
     }
 
 
+    /**
+     * @param lifetime 读取成功后为该 key 重置的过期时间，单位：<b>秒</b>。
+     */
     @Override
     public <T> T getAndExpire(String key, long lifetime) {
         Object cacheValue = doGet(key, lifetime);
@@ -277,6 +289,9 @@ public abstract class AbstractCache implements Cache {
 
     protected abstract void doHashSet(String hashName, String key, String value);
 
+    /**
+     * @param lifetime 过期时间，单位：<b>秒</b>；{@code null} 表示不设过期。具体是否生效取决于实现（如 Redis SETEX；LocalCache 可能忽略）。
+     */
     protected abstract void doSet(String key, String value, Long lifetime);
 
     protected abstract void doPublish(String key, String value);
@@ -287,6 +302,9 @@ public abstract class AbstractCache implements Cache {
 
     protected abstract Map<String, String> doHashGetAll(String hashName);
 
+    /**
+     * @param lifetime 非 {@code null} 时：命中后在实现允许的前提下刷新该 key 的过期时间，单位：<b>秒</b>（如 Redis EXPIRE）。{@code null} 表示只读、不续期。
+     */
     protected abstract Object doGet(String key, Long lifetime);
 
 
