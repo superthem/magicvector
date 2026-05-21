@@ -104,6 +104,15 @@ public abstract class AbstractCache implements Cache {
         doHashSet(hashName, key, serializedValue);
     }
 
+    @Override
+    public void hSetAll(String hashName, Map<String, Object> map) {
+        java.util.Objects.requireNonNull(hashName, "hashName");
+        java.util.Objects.requireNonNull(map, "map");
+        Map<String, String> serialized = new HashMap<>();
+        map.forEach((k, v) -> serialized.put(k, serialize(v)));
+        doHashSetAll(hashName, serialized);
+    }
+
     /**
      * @param lifetime 过期时间，单位：<b>秒</b>；传入 {@link #doSet(String, String, Long)}。
      */
@@ -288,6 +297,11 @@ public abstract class AbstractCache implements Cache {
 
 
     protected abstract void doHashSet(String hashName, String key, String value);
+
+    /**
+     * 整键替换 hash：{@code fieldValues} 为已序列化的 field→串；空 map 表示删除该 hash key。
+     */
+    protected abstract void doHashSetAll(String hashName, Map<String, String> fieldValues);
 
     /**
      * @param lifetime 过期时间，单位：<b>秒</b>；{@code null} 表示不设过期。具体是否生效取决于实现（如 Redis SETEX；LocalCache 可能忽略）。

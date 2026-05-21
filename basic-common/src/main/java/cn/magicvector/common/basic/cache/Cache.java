@@ -2,6 +2,7 @@ package cn.magicvector.common.basic.cache;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface Cache {
@@ -15,6 +16,15 @@ public interface Cache {
      * @param value    the value.
      */
     void hset(String hashName, String key, Object value);
+
+    /**
+     * 整键替换 hash：成功后该 key 下仅包含 {@code map} 中的 field；不传出的旧 field 均被移除。
+     * {@code map} 为空时删除该 hash key。
+     *
+     * @param hashName 哈希键名
+     * @param map      field → value，会与 {@link #hset(String, String, Object)} 一样做序列化
+     */
+    void hSetAll(String hashName, Map<String, Object> map);
 
     /**
      * Set key-value to the cache.

@@ -70,6 +70,15 @@ public class LocalCache extends AbstractCache {
         hashCache.computeIfAbsent(hashName, k -> new ConcurrentHashMap<>()).put(key, value);
     }
 
+    @Override
+    protected void doHashSetAll(String hashName, Map<String, String> fieldValues) {
+        if (fieldValues.isEmpty()) {
+            hashCache.remove(hashName);
+            return;
+        }
+        hashCache.put(hashName, new ConcurrentHashMap<>(fieldValues));
+    }
+
     /**
      * @param lifetime 过期时间（<b>秒</b>）；{@code null} 表示不设时钟过期（仅受 Guava 权重驱逐影响），与 Redis 无 TTL 相近。
      */

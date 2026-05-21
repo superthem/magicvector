@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.Transaction;
 
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,23 @@ public class RedisCache extends AbstractCache{
         Jedis jedis =  getJedis();
         jedis.hset(hashName, key, value);
         jedis.close();
+    }
+
+    @Override
+    protected void doHashSetAll(String hashName, Map<String, String> fieldValues) {
+        Jedis jedis = getJedis();
+        try {
+            if (fieldValues.isEmpty()) {
+                jedis.del(hashName);
+                return;
+            }
+            Transaction multi = jedis.multi();
+            multi.del(hashName);
+            multi.hmset(hashName, fieldValues);
+            multi.exec();
+        } finally {
+            jedis.close();
+        }
     }
 
     /**
