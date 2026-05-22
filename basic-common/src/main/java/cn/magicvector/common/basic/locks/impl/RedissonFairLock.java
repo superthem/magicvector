@@ -46,7 +46,7 @@ public class RedissonFairLock implements DistLock {
             boolean acquired = fairLock.tryLock(wait, expire, TimeUnit.MILLISECONDS);
 
             if (acquired) {
-                log.info("Redisson lock acquired for resource: {}", resourceId);
+                log.debug("Redisson lock acquired for resource: {}", resourceId);
                 // 返回一个唯一标识（虽然 Redisson 不需要你传，但接口要求返回 UUID）
                 // 注意：这里返回的 UUID 并不是 Redisson 内部用的，仅用于满足接口
                 return UUID.randomUUID().toString();
@@ -72,7 +72,7 @@ public class RedissonFairLock implements DistLock {
             // 如果你传了错误的 lockValue，说明上层逻辑有问题
             // 这里我们假设 lockValue 是有效的，只做释放
             lock.unlock();
-            log.info("Redisson lock released for resource: {}", resourceId);
+            log.debug("Redisson lock released for resource: {}", resourceId);
             return true;
         } catch (IllegalMonitorStateException e) {
             // 当前线程不是锁的持有者
