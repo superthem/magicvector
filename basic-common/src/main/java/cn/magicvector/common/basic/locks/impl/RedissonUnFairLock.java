@@ -46,7 +46,7 @@ public class RedissonUnFairLock implements DistLock {
             boolean acquired = lock.tryLock(wait, expire, TimeUnit.MILLISECONDS);
 
             if (acquired) {
-                log.info("Redisson lock acquired for resource: {}", resourceId);
+                log.debug("Redisson lock acquired for resource: {}", resourceId);
                 // 返回一个唯一标识（虽然 Redisson 不需要你传，但接口要求返回 UUID）
                 // 注意：这里返回的 UUID 并不是 Redisson 内部用的，仅用于满足接口
                 return UUID.randomUUID().toString();
