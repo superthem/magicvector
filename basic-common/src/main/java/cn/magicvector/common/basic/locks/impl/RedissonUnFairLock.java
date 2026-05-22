@@ -72,7 +72,7 @@ public class RedissonUnFairLock implements DistLock {
             // 如果你传了错误的 lockValue，说明上层逻辑有问题
             // 这里我们假设 lockValue 是有效的，只做释放
             lock.unlock();
-            log.info("Redisson lock released for resource: {}", resourceId);
+            log.debug("Redisson lock released for resource: {}", resourceId);
             return true;
         } catch (IllegalMonitorStateException e) {
             // 当前线程不是锁的持有者
