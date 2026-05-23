@@ -319,4 +319,9 @@ public class LocalCache extends AbstractCache {
     public Boolean lcontains(String key, String element) {
         throw new MagicException(Errors.NOT_SUPPORTED);
     }
+
+    @Override
+    public Long llen(String key) {
+        throw new MagicException(Errors.NOT_SUPPORTED);
+    }
 }

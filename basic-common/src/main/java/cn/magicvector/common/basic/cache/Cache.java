@@ -303,4 +303,12 @@ public interface Cache {
      */
     Boolean lcontains(String key, String element);
 
+    /**
+     * Redis LLEN：列表元素个数；key 不存在或非列表语义下与 Redis 一致时返回 {@code 0}。
+     *
+     * @param key 列表 key
+     * @return 长度；不存在则 {@code 0}
+     */
+    Long llen(String key);
+
 }

@@ -1,0 +1,1 @@
+你在 redisCache（Cache 接口 + Redis 实现）里增加类似 Long llen(String key)（对应 Redis LLEN，列表不存在时返回 0）即可；加好后在此处 blockingPopOne() 前一格调用并打 log.info 就行。

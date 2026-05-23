@@ -346,6 +346,16 @@ public class RedisCache extends AbstractCache{
         }
     }
 
+    @Override
+    public Long llen(String key) {
+        Jedis jedis = getJedis();
+        try {
+            return jedis.llen(key);
+        } finally {
+            jedis.close();
+        }
+    }
+
 
     private Jedis getJedis(){
         return  jedisPool.getResource();
