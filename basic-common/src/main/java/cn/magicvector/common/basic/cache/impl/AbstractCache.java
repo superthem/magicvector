@@ -164,6 +164,15 @@ public abstract class AbstractCache implements Cache {
         return concurrentGet(key, callback, null);
     }
 
+    private <T> CacheWrapper<T> doDeserialize(String rawStr){
+        try {
+           return  (CacheWrapper<T>) deserialize(rawStr);
+        }
+        catch (Exception e){
+            return null;
+        }
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -173,8 +182,10 @@ public abstract class AbstractCache implements Cache {
         Object cacheWrapperFirstStr = doGet(key, null);
         if (cacheWrapperFirstStr != null) {
             // 如果命中，直接返回包装内的值
-            CacheWrapper<T> cacheWrapperFirst = (CacheWrapper<T>) deserialize((String)cacheWrapperFirstStr);
-            return cacheWrapperFirst.cacheValue;
+            CacheWrapper<T> cacheWrapperFirst = doDeserialize((String)cacheWrapperFirstStr);
+            if(cacheWrapperFirst != null){
+                return cacheWrapperFirst.cacheValue;
+            }
         }
 
         CompletableFuture<T> newcomer = new CompletableFuture<>();

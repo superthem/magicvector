@@ -14,15 +14,10 @@ import cn.magicvector.common.basic.util.Asserts;
 import cn.magicvector.common.basic.util.S;
 import cn.magicvector.common.rest.annotation.SwaggerModule;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 import java.util.Map;
@@ -108,7 +103,7 @@ public class UserLoginControllerImpl implements UserLoginController {
     }
 
     @Override
-    public Response<Boolean> logout(Request<Empty> request) {
+    public Response<Boolean> logout(Request<cn.magicvector.common.basic.model.Empty> request) {
         String token =  request.getToken();
         String cacheKey = getSessionKey(token);
         if(cache.get(cacheKey) == null){
@@ -125,7 +120,7 @@ public class UserLoginControllerImpl implements UserLoginController {
     }
 
     @Override
-    public Response<CurrentUser> getUserInfo(Request<Empty> request) {
+    public Response<CurrentUser> getUserInfo(Request<cn.magicvector.common.basic.model.Empty> request) {
 
         String token = request.getToken();
         String cacheKey = getSessionKey(token);
@@ -142,7 +137,7 @@ public class UserLoginControllerImpl implements UserLoginController {
     }
 
     @Override
-    public Response<CurrentUser> refreshAndGetUserInfo(Request<Empty> request) {
+    public Response<CurrentUser> refreshAndGetUserInfo(Request<cn.magicvector.common.basic.model.Empty> request) {
         String token = request.getToken();
         if (S.isEmpty(token)) {
             return Response.fail(Errors.USER_NOT_LOGIN);

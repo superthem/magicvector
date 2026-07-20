@@ -67,17 +67,13 @@ public class RedissonFairLock implements DistLock {
         RLock lock = redissonClient.getFairLock(lockKey);
 
         try {
-            // 注意：Redisson 的 unlock() 不需要传 lockValue
-            // 它内部通过 ThreadLocal 和 UUID 自动识别是否是持有者
-            // 如果你传了错误的 lockValue，说明上层逻辑有问题
-            // 这里我们假设 lockValue 是有效的，只做释放
+            if (!lock.isHeldByCurrentThread()) {
+                log.warn("Attempt to unlock non-held lock for resource: {}", resourceId);
+                return false;
+            }
             lock.unlock();
             log.debug("Redisson lock released for resource: {}", resourceId);
             return true;
-        } catch (IllegalMonitorStateException e) {
-            // 当前线程不是锁的持有者
-            log.warn("Attempt to unlock non-held lock for resource: {}", resourceId);
-            return false;
         } catch (Exception e) {
             log.error("Error releasing Redisson lock for resource: {}", resourceId, e);
             return false;
