@@ -63,6 +63,16 @@ public interface UserLoginService {
     public Map<String, Object> loginByWechatAuthAndPhoneCode(String silentAuthCode, String phoneCode, Map<String, String> extraInfo);
 
     /**
+     * 一键登录（如运营商/本机号码校验 token）。登录失败请抛出 MagicException。
+     *
+     * @param verifyToken 校验 token
+     * @param appKey 应用端唯一标识
+     * @param extraInfo 附加信息（如 platform 等平台相关字段）
+     * @return 用户属性
+     */
+    Map<String, Object> loginByVerifyToken(String verifyToken, String appKey, Map<String, String> extraInfo);
+
+    /**
      * 检查用户是否登录，如果用户没有登录，获取登录地址。
      * @return
      */

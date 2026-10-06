@@ -30,6 +30,12 @@ public class UserLoginDTO {
     @ApiModelProperty(value = "微信获取绑定手机号的授权码（与静默授权配合，用于自动注册登录）")
     private String phoneCode;
 
+    @ApiModelProperty(value = "一键登录校验 token")
+    private String verifyToken;
+
+    @ApiModelProperty(value = "应用端唯一标识（一键登录时使用）")
+    private String appKey;
+
     @ApiModelProperty(value = "额外信息")
     private Map<String, String> extraInfo;
 

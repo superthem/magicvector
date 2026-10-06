@@ -58,6 +58,7 @@ public class UserLoginControllerImpl implements UserLoginController {
         String password = userLoginDTO.getPasswordMd5();
         String silentAuthCode = userLoginDTO.getSilentAuthCode();
         String phoneCode = userLoginDTO.getPhoneCode();
+        String verifyToken = userLoginDTO.getVerifyToken();
         Map<String, Object> userProps = null;
         if(S.isNotEmpty(password)){
             if(S.isNotEmpty(username)){
@@ -80,6 +81,9 @@ public class UserLoginControllerImpl implements UserLoginController {
             else{
                 userProps = userLoginService.loginByWechatSilentAuthCode(silentAuthCode, userLoginDTO.getExtraInfo());
             }
+        }
+        else if(S.isNotEmpty(verifyToken)){
+            userProps = userLoginService.loginByVerifyToken(verifyToken, userLoginDTO.getAppKey(), userLoginDTO.getExtraInfo());
         }
         else if(S.isNotEmpty(code)){
             userProps = userLoginService.loginByPhoneAndCode(phone, code, userLoginDTO.getExtraInfo());
